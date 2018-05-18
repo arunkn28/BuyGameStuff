@@ -19,6 +19,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from .account.urls import urlpatterns as account_urls
+from .products.urls import urlpatterns
+
 from .core.views import HomePage
 
 urlpatterns = [
