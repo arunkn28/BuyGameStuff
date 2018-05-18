@@ -19,7 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from .account.urls import urlpatterns as account_urls
-from .products.urls import urlpatterns
+from .products.urls import urlpatterns as product_urls
 
 from .core.views import HomePage
 
@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     
     url(r'^account/', include((account_urls, 'account'), namespace='account')),
+    url(r'^product/', include((product_urls, 'product'), namespace='product')),
     url(r'^$', HomePage.as_view(),name='homepage'),
 ]
 
