@@ -4,5 +4,5 @@ from .views import ProductList, ProductDetail
 
 urlpatterns = [
     url(r'^productlist/$', ProductList.as_view(),name='productlist'),
-    url(r'^productdetails/(?P<product_id>\d+)/$', ProductDetail.as_view(),name='productdetails'),
+    url(r'^productdetails/(?P<slug>[\w-]+)/$', ProductDetail.as_view(),name='productdetails'),
 ]
