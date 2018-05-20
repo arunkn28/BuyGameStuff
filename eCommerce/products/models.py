@@ -1,6 +1,8 @@
 from django.db import models
 from django.db.models.signals import pre_save
 
+from django.urls import reverse
+
 from .utils import CATEGORY_PC, CATEGORY_PS3, CATEGORY_PS4, \
                     CATEGORY_XBOX1, unique_slug_generator 
                     
@@ -59,7 +61,7 @@ class Product(models.Model):
     objects = ProductManager()
     
     def get_absolute_url(self):
-        return "/product/productdetails/{slug}".format(slug=self.slug)
+        return reverse("productdetails",kwargs={'slug':self.slug})
     
     def __str__(self):
         return self.name        

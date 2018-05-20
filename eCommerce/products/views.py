@@ -1,5 +1,5 @@
-from django.shortcuts import render, get_object_or_404
-from django.http.response import HttpResponse
+from django.shortcuts import render
+from django.http.response import HttpResponse, Http404
 from django.views import View
 
 from .models import Product, Category
@@ -15,17 +15,22 @@ class ProductBaseView(View):
 class ProductDetail(ProductBaseView):
     
     """View to show the detailed product description.
-    Will get the product id being passed into this view,
+    Will get the slug being passed into this view,
     using which will filter the product and get the item details"""
     
     def get(self,request,slug=None):
-        """"Get the details of the product and populate it
+        """
+        DESC: Get the details of the product and populate it
         Chnanged the Product objects with the help of custom models managers in models.py
         Use slug instead of product id as we will be having product name in url slug
-        which is better than having an id"""
+        which is better than having an id
+        """
         productdao = ProductDAO()
         product_details = productdao.get_product_by_slug(slug)
-        self.context['product_details'] = product_details
+        if product_details:
+            self.context['product_details'] = product_details
+        else:
+            raise Http404("No such product")    
         return render(request, 'product-details.html',self.context)
 
 class ProductList(ProductBaseView):

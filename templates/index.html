@@ -154,7 +154,7 @@
 							<div class="product-image-wrapper">
 								<div class="single-products">
 										<div class="productinfo text-center">
-											<a href={{product.get_absolute_url}}><img src="{{product.image.url}}" height="250" width="42" alt="" /></a>
+											<a href={{product.get_absolute_url}}><img src="{{product.image.url}}"class="img-thumbnail" alt="" /></a>
 											<h2>${{product.price}}</h2>
 											<p><b>{{product.name}}</b></p>
 											<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Buy Now</a>
@@ -727,14 +727,6 @@
 		</div>
 		
 	</footer><!--/Footer-->
-	
-
   
-    <script src="{% static 'js/jquery.js' %}"></script>
-	<script src="{% static 'js/bootstrap.min.js' %}"></script>
-	<script src="{% static 'js/jquery.scrollUp.min.js' %}"></script>
-	<script src="{% static 'js/price-range.js' %}"></script>
-    <script src="{% static 'js/jquery.prettyPhoto.js' %}"></script>
-    <script src="{% static 'js/main.js' %}"></script>
 </body>
 </html>

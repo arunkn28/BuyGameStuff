@@ -26,9 +26,9 @@ from .core.views import HomePage
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     
-    url(r'^account/', include((account_urls, 'account'), namespace='account')),
-    url(r'^product/', include((product_urls, 'product'), namespace='product')),
-    url(r'^$', HomePage.as_view(),name='homepage'),
+    url(r'^account/', include(account_urls)),
+    url(r'^product/', include(product_urls)),
+    url(r'^$', HomePage.as_view(),name='homepage')
 ]
 
 if settings.DEBUG:
