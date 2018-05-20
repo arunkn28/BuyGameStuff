@@ -39,16 +39,16 @@ class RegisterView(AccountBaseClass):
     
     def post(self,request):
         """Create an User"""
-        username = request.POST['username']
+        #username = request.POST['username']
         password = request.POST['password']
         email = request.POST['email']
         """can keep username as the emailid. Can think of some other logic
         or maybe can do an ajax call while entering username to check if it already exists.
         Also can create user based on either email or mobile"""
-        user = User.objects.create_user(username, email, password)
+        user = User.objects.create_user(email, email, password)
         if user:
             """Login him and redirect to the login Page"""
-            pass
+            
         else:
             """Throw error saying username or email already exists"""
             pass
