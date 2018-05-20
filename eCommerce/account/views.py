@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 
 from django.http import HttpResponse
 from django.views import View
+from django.shortcuts import render
 
 
 class AccountBaseClass(View):
@@ -14,12 +15,7 @@ class LoginView(AccountBaseClass):
     
     def get(self,request):
         """Replace the code added to test"""
-        username='arunkn28'
-        password='Welcome@29'
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-        return HttpResponse('hello login!!')
+        return render(request,'login.html',{})
     
     def post(self,request):
         

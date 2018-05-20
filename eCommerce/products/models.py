@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models.signals import pre_save
+from django.db.models import Q
 
 from django.urls import reverse
 
@@ -61,6 +62,9 @@ class ProductManager(models.Manager):
             print('500')
             raise Exception 
         return product
+    
+    def get_product_by_search(self,query):
+        pass
             
 class Product(models.Model):
     """Product Table Schema"""
@@ -83,7 +87,7 @@ class Product(models.Model):
     objects = ProductManager()
     
     def get_absolute_url(self):
-        return reverse("productdetails",kwargs={'slug':self.slug})
+        return reverse("product:productdetails",kwargs={'slug':self.slug})
     
     def __str__(self):
         return self.name        

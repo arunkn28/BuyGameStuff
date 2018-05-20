@@ -43,14 +43,16 @@ class ProductList(ProductBaseView):
     def get(self,request, category_name=None):
         """Make a list of products and add it to the context"""
         try:
-            category_id = Category.objects.filter(name=category_name).values('pk')[0].get('pk')
-            all_products = self.product_obj.get(category_id=category_id)
+            if category_name:
+                category_id = Category.objects.filter(name=category_name).values('pk')[0].get('pk')
+                all_products = self.product_obj.get(category_id=category_id)
+            else:
+                query = request.GET.get('q')
+                all_products = self.product_obj.get_product_by_search(query)
+            self.context['all_products'] = all_products
         except Product.DoesNotExist:
             print('Hahaha nothing found')
         except:
             print('500')        
-        name = ''
-        for product in all_products:
-            name = name + product.name
-        return HttpResponse("hiii"+str(name))
+        return render(request,'product-list.html',self.context)
     
