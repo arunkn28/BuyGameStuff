@@ -32,6 +32,7 @@ class Category(models.Model):
 
 
 class ProductManager(models.Manager):
+    
     def get_product_by_id(self,product_id):
         product =  self.get_queryset().filter(pk=product_id)
         if product.count()== 1:
@@ -39,6 +40,27 @@ class ProductManager(models.Manager):
         else:
             return None
 
+    def get_products_by_feature(self,featured):
+        """Method to get all featured products"""
+        try:
+            products = Product.objects.filter(featured=featured)
+        except Product.DoesNotExist:
+            products = None
+        except:
+            print('500')
+            raise Exception        
+        return products
+    
+    def get_product_by_slug(self,slug):
+        """Method to get the product based on slug"""
+        try:
+            product = Product.objects.get(slug=slug)
+        except Product.DoesNotExist:
+            product = None
+        except:
+            print('500')
+            raise Exception 
+        return product
             
 class Product(models.Model):
     """Product Table Schema"""

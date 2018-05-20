@@ -3,7 +3,6 @@ from django.http.response import HttpResponse, Http404
 from django.views import View
 
 from .models import Product, Category
-from .prodcuctDAO import ProductDAO
 
 # Create your views here.
 
@@ -11,6 +10,7 @@ class ProductBaseView(View):
         
     def __init__(self):
         self.context = {}
+        self.product_obj = Product.objects
     
 class ProductDetail(ProductBaseView):
     
@@ -25,8 +25,7 @@ class ProductDetail(ProductBaseView):
         Use slug instead of product id as we will be having product name in url slug
         which is better than having an id
         """
-        productdao = ProductDAO()
-        product_details = productdao.get_product_by_slug(slug)
+        product_details = self.product_obj.get_product_by_slug(slug)
         if product_details:
             self.context['product_details'] = product_details
         else:
@@ -45,7 +44,7 @@ class ProductList(ProductBaseView):
         """Make a list of products and add it to the context"""
         try:
             category_id = Category.objects.filter(name=category_name).values('pk')[0].get('pk')
-            all_products = Product.objects.get(category_id=category_id)
+            all_products = self.product_obj.get(category_id=category_id)
         except Product.DoesNotExist:
             print('Hahaha nothing found')
         except:
