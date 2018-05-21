@@ -44,7 +44,7 @@ class ProductManager(models.Manager):
     def get_products_by_feature(self,featured):
         """Method to get all featured products"""
         try:
-            products = Product.objects.filter(featured=featured)
+            products = self.filter(featured=featured)
         except Product.DoesNotExist:
             products = None
         except:
@@ -55,7 +55,7 @@ class ProductManager(models.Manager):
     def get_product_by_slug(self,slug):
         """Method to get the product based on slug"""
         try:
-            product = Product.objects.get(slug=slug)
+            product =  self.get(slug=slug)
         except Product.DoesNotExist:
             raise Product.DoesNotExist
         except:
@@ -68,7 +68,7 @@ class ProductManager(models.Manager):
         try:
             search = Q(name__icontains=query)|Q(description__icontains=query)\
                     | Q(slug__iconatins=query)
-            result = self.productdao_obj.filter(search).distinct()
+            result = self.filter(search).distinct()
         except Product.DoesNotExist:
             raise Product.DoesNotExist
         except:
