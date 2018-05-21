@@ -57,14 +57,24 @@ class ProductManager(models.Manager):
         try:
             product = Product.objects.get(slug=slug)
         except Product.DoesNotExist:
-            product = None
+            raise Product.DoesNotExist
         except:
             print('500')
             raise Exception 
         return product
     
     def get_product_by_search(self,query):
-        pass
+        """Get the prodcuts based on serach"""
+        try:
+            search = Q(name__icontains=query)|Q(description__icontains=query)\
+                    | Q(slug__iconatins=query)
+            result = self.productdao_obj.filter(search).distinct()
+        except Product.DoesNotExist:
+            raise Product.DoesNotExist
+        except:
+            print('500')
+            raise Exception
+        return result            
             
 class Product(models.Model):
     """Product Table Schema"""
@@ -84,7 +94,7 @@ class Product(models.Model):
     modified_by         = models.CharField(max_length=50,null=True,default=None,blank=True)
     modified_datetime   = models.DateTimeField(null=True,default=None,blank=True)
     
-    objects = ProductManager()
+    objects             = ProductManager()
     
     def get_absolute_url(self):
         return reverse("product:productdetails",kwargs={'slug':self.slug})

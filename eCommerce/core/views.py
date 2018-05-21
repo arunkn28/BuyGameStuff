@@ -15,7 +15,11 @@ class HomePage(BaseView):
         self.productdao_obj = Product.objects
         
     def get(self,request):
-        """Write code to set a visit cookie id"""
+        """
+        Write code to set a visit cookie id,
+        Also while getting featured items get only first 10-12
+        counts based on what can be accomodated in home page.
+        """
         featured_products = self.productdao_obj.get_products_by_feature(True)
         print(featured_products)
         self.context['featured_products'] = featured_products

@@ -25,11 +25,14 @@ class ProductDetail(ProductBaseView):
         Use slug instead of product id as we will be having product name in url slug
         which is better than having an id
         """
-        product_details = self.product_obj.get_product_by_slug(slug)
-        if product_details:
+        try:
+            product_details = self.product_obj.get_product_by_slug(slug)
             self.context['product_details'] = product_details
-        else:
-            raise Http404("No such product")    
+        except Product.DoesNotExist:
+            return Http404("No such product")
+        except Exception:
+            """render 500"""
+            pass
         return render(request, 'product-details.html',self.context)
 
 class ProductList(ProductBaseView):
@@ -50,9 +53,9 @@ class ProductList(ProductBaseView):
                 query = request.GET.get('q')
                 all_products = self.product_obj.get_product_by_search(query)
             self.context['all_products'] = all_products
+            return render(request,'product-list.html',self.context)
         except Product.DoesNotExist:
-            print('Hahaha nothing found')
+            return Http404('Hahaha nothing found')
         except:
             print('500')        
-        return render(request,'product-list.html',self.context)
     

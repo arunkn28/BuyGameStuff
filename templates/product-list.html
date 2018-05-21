@@ -2,12 +2,11 @@
 {% load static %}
 {% block content%}
 <meta charset="utf-8">
-	<section id="advertisement">
+	<!-- <section id="advertisement">
 		<div class="container">
 			<img src="images/shop/advertisement.jpg" alt="" />
 		</div>
-	</section>
-	{{all_products}}
+	</section> -->
 	<section>
 		<div class="container">
 			<div class="row">
@@ -145,7 +144,7 @@
 						</div><!--/price-range-->
 						
 						<div class="shipping text-center"><!--shipping-->
-							<img src="images/home/shipping.jpg" alt="" />
+							<img src="{% static 'images/home/shipping.jpg' %}" alt="" />
 						</div><!--/shipping-->
 						
 					</div>
@@ -158,32 +157,7 @@
 							<div class="product-image-wrapper">
 								<div class="single-products">
 									<div class="productinfo text-center">
-										<img src="images/shop/product12.jpg" alt="" />
-										<h2>$56</h2>
-										<p>Easy Polo Black Edition</p>
-										<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-									</div>
-									<div class="product-overlay">
-										<div class="overlay-content">
-											<h2>$56</h2>
-											<p>Easy Polo Black Edition</p>
-											<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-										</div>
-									</div>
-								</div>
-								<div class="choose">
-									<ul class="nav nav-pills nav-justified">
-										<li><a href=""><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
-										<li><a href=""><i class="fa fa-plus-square"></i>Add to compare</a></li>
-									</ul>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="product-image-wrapper">
-								<div class="single-products">
-									<div class="productinfo text-center">
-										<img src="images/shop/product11.jpg" alt="" />
+										<img src="{% static 'images/shop/product12.jpg' %}" alt="" />
 										<h2>$56</h2>
 										<p>Easy Polo Black Edition</p>
 										<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
