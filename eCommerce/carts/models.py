@@ -27,6 +27,12 @@ class CartManager(models.Manager):
         return cart_obj    
             
 class Cart(models.Model):
+    """
+    Cart Model
+    Create one more table to store the product quantity in cart.
+    Should have a foreign key to cart and for each product in cart will have a
+    record having the quantity.
+    """
     user                = models.ForeignKey(User, null =True, blank=True)
     products            = models.ManyToManyField(Product, blank=True)
     subtotal            = models.DecimalField(max_digits=7,decimal_places=2,default=0.00)
@@ -41,14 +47,27 @@ class Cart(models.Model):
     
 
 def m2m_changed_cart_receiver(sender,instance,action,*args,**kwargs):
+    """
+    This is used to update the cart total whenever there is an addition or removal 
+    from the cart
+    """
     if action == 'post_add' or action == 'post_remove' or action == 'post_clear':
         products = instance.objects.all()
         total = 0
         for product in products:
             total += product.price
-        instance.total = total
+        instance.subtotal = total
         instance.save()
         
 m2m_changed.connect(m2m_changed_cart_receiver, sender= Cart.products.through)            
              
-                
+
+def pre_save_cart_receiver(sender,instance,*args,**kwargs):
+    """
+    Add the extraCharges Method to take into consideration
+    the shipping charges and taxes
+    """
+    if instance.subtotal> 0.00:
+        instance.total = instance.subtotal #+ extraCharges()
+        
+pre_save.connect(pre_save_cart_receiver, sender=Cart)                    

@@ -20,6 +20,7 @@ from django.conf.urls.static import static
 
 from .account.urls import urlpatterns as account_urls
 from .products.urls import urlpatterns as product_urls
+from .carts.urls import urlpatterns as cart_urls
 
 from .core.views import HomePage
 
@@ -29,7 +30,7 @@ urlpatterns = [
     
     url(r'^account/', include(account_urls, namespace='account')),
     url(r'^product/', include(product_urls, namespace='product')),
-    url(r'^cart/', include(product_urls, namespace='cart')),
+    url(r'^cart/', include(cart_urls, namespace='cart')),
     
 ]
 

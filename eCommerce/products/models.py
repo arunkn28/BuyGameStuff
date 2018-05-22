@@ -77,7 +77,14 @@ class ProductManager(models.Manager):
         return result            
             
 class Product(models.Model):
-    """Product Table Schema"""
+    """
+    Product Table Schema
+    Maybe make a new table to have offers on the products,i.e, discount, 
+    coupon codes maybe?!
+    Also check on adding extra image field for a product. 
+    Will require 3-4 images each product and have to check an
+    efficient way of doing that
+    """
     sku                 = models.CharField(max_length=50,default=None)
     name                = models.CharField(max_length=120,default=None)
     description         = models.TextField(default=None)
