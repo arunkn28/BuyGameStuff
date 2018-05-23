@@ -4,7 +4,8 @@ from django.db.models import Q
 
 from django.urls import reverse
 
-from .utils import CATEGORY_NAMES, unique_slug_generator 
+from eCommerce.utils import unique_slug_generator
+from .utils import  CATEGORY_NAMES
                     
 # Create your models here.
 
