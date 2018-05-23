@@ -4,23 +4,14 @@ from django.db.models import Q
 
 from django.urls import reverse
 
-from .utils import CATEGORY_PC, CATEGORY_PS3, CATEGORY_PS4, \
-                    CATEGORY_XBOX1, unique_slug_generator 
-                    
-                    
+from .utils import CATEGORY_NAMES, unique_slug_generator 
                     
 # Create your models here.
 
 class Category(models.Model):
     """Category Table Schema"""
 
-    CATEGORYNAMES = (
-                    (CATEGORY_PS4,'PS4'),
-                    (CATEGORY_PS3,'PS3'),
-                    (CATEGORY_PC,'PC'),
-                    (CATEGORY_XBOX1,'XBOX1')
-                )
-    name                    = models.CharField(choices=CATEGORYNAMES,max_length=10)
+    name                    = models.CharField(choices=CATEGORY_NAMES,max_length=10)
     description             = models.TextField(max_length=100)
     image                   = models.ImageField(default=None,blank=True)
     created_by              = models.CharField(max_length=50,default=None)

@@ -8,6 +8,13 @@ CATEGORY_PS3 = 'PS3'
 CATEGORY_PC  = 'PC'
 CATEGORY_XBOX1 = 'XBOX1'
 
+CATEGORY_NAMES = (
+                    (CATEGORY_PS4,'PS4'),
+                    (CATEGORY_PS3,'PS3'),
+                    (CATEGORY_PC,'PC'),
+                    (CATEGORY_XBOX1,'XBOX1')
+                )
+
 def random_string_generator(size=10, chars=string.ascii_lowercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
