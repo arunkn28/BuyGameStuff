@@ -1,13 +1,16 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-
-from django.http import HttpResponse
+from django import db
 from django.views import View
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
+from django.utils.http import is_safe_url
+
+from .models import Account
 
 class AccountBaseClass(View):
-    pass
+    def __init__(self):
+        self.account_obj = Account.objects
 
 class LoginView(AccountBaseClass):
     
@@ -21,34 +24,53 @@ class LoginView(AccountBaseClass):
         
         """Authenticate and log in a user and redirect him to the home page.
         If not authenticated reload the pgae with error in the context dict"""
-        
-        username = request.POST['username']
-        password = request.POST['password']
-        
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-        else:
-            pass
-
+    
+        try:    
+            username     = request.POST['email']
+            password     = request.POST['password']
+            next_        = request.GET.get('next')
+            next_post    = request.GET.get('next')
+            next_url = next_ or next_post
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                if is_safe_url(next_url, request.get_host()):
+                    redirect(next_url)
+                else:
+                    return redirect("/")
+            else:
+                return render(request,'login.html',{'invalid_user':True})
+        except:
+            print('500') 
 
 class RegisterView(AccountBaseClass):
-    """View to Register a User"""
-    def get(self,request):
-        pass
+    """
+    View to Register a User
+    """
     
     def post(self,request):
-        """Create an User"""
-        #username = request.POST['username']
-        password = request.POST['password']
-        email = request.POST['email']
-        """can keep username as the emailid. Can think of some other logic
+        """
+        Create an User
+        """
+        first_name  = request.POST.get('first_name')
+        last_name   = request.POST.get('last_name')
+        password    = request.POST.get('password')
+        email       = request.POST.get('email_id')
+        """
+        can keep username as the emailid. Can think of some other logic
         or maybe can do an ajax call while entering username to check if it already exists.
-        Also can create user based on either email or mobile"""
-        user = User.objects.create_user(email, email, password)
-        if user:
-            """Login him and redirect to the login Page"""
-            
-        else:
-            """Throw error saying username or email already exists"""
-            pass
+        Also can create user based on either email or mobile
+        """
+        try:
+            user = User.objects.create_user(email, email, password)
+            if user:
+                """
+                Login him and redirect to the login Page. Send account Activation Mailer??
+                """
+                login(request, user)
+                self.account_obj.create_account(user.id ,first_name, last_name, email)
+                return redirect('/')
+        except db.IntegrityError:
+            print("render the registeration page with error saying user already exists")
+        except Exception as ex:
+            print("500::"+ex.message)       

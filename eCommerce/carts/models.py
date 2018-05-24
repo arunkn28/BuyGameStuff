@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from django.db.models.signals import pre_save, m2m_changed
+from django.db.models.signals import pre_save, post_save
 # Create your models here.
 from eCommerce.products.models import Product
 User = settings.AUTH_USER_MODEL
@@ -35,7 +35,7 @@ class Cart(models.Model):
     Should have a foreign key to cart and for each product in cart will have a
     record having the quantity.
     """
-    user                = models.ForeignKey(User, null =True, blank=True)
+    user                = models.ForeignKey(User, null =True)
     #products            = models.ManyToManyField(Product, blank=True)
     subtotal            = models.DecimalField(max_digits=7,decimal_places=2,default=0.00)
     total               = models.DecimalField(max_digits=7,decimal_places=2,default=0.00)
@@ -81,13 +81,17 @@ class CartDetailsManager(models.Manager):
         return self.filter(product_id=product_id,cart_id=cart_id)        
     
     def create_cart_details(self,cart_id,product_id):
-        return self.create(cart_id=cart_id)
+        return self.create(cart_id=cart_id,product_id=product_id )
     
     def get_cart_count(self,cart_id):
         return self.get_queryset().filter(cart_id=cart_id).count()    
-  
+    
+    def get_cart_items(self,cart_id):
+        return self.get_queryset().filter(cart_id)
+    
+    
 class CartDetails(models.Model):
-    cart_id             = models.ForeignKey(Cart)
+    cart                = models.ForeignKey(Cart)
     product_id          = models.ForeignKey(Product)
     quantity            = models.IntegerField(default=1)
     created_datetime    = models.DateField(auto_now=True)
@@ -102,21 +106,12 @@ class CartDetails(models.Model):
 """
     Signals to update the total and subtotal in the Cart Details
 """    
-# def m2m_changed_cartdetails_receiver(sender,instance,action,*args,**kwargs):
+# def post_save_cart_details_receiver(sender,instance,*args,**kwargs):
 #     """
-#     This is used to update the cart total whenever there is an addition or removal 
-#     from the cart
+#     Add the extraCharges Method to take into consideration
+#     the shipping charges and taxes
 #     """
-#     if action == 'post_add':# or action == 'post_remove' or action == 'post_clear':
-#         products = instance.objects.all()
-#         cart_details_obj = CartDetailsManager()
-#         for product in products:
-#             product_id = product.id
-#             cart_details_obj = cart_details_obj.get_cart_details(product_id, instance.cart_id)
-#             if not cart_details_obj:
-#                 cart_details_obj.create_cart_details(instance.cart_id,product_id)
-#                     
-#         #instance.save()
-#         
-# m2m_changed.connect(m2m_changed_cartdetails_receiver, sender= Cart.products.through)   
-#   
+#     if instance.subtotal> 0.00:
+#         instance.total = instance.subtotal #+ extraCharges()
+#           
+# post_save.connect(post_save_cart_details_receiver, sender=CartDetails)                    

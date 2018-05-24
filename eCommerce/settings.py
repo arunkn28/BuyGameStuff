@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     
     #myapps
     'eCommerce.products',
-    'eCommerce.carts'
+    'eCommerce.carts',
+    'eCommerce.account',
 ]
 
 MIDDLEWARE = [
@@ -117,7 +118,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-
+LOGOUT_REDIRECT_URL = '/'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 

@@ -52,10 +52,12 @@ class ProductList(ProductBaseView):
             else:
                 query = request.GET.get('q')
                 all_products = self.product_obj.get_product_by_search(query)
+                if not all_products:
+                    raise Product.DoesNotExist
             self.context['all_products'] = all_products
             return render(request,'product-list.html',self.context)
         except Product.DoesNotExist:
-            return Http404('Hahaha nothing found')
+            raise Http404('Hahaha nothing found')
         except:
             print('500')        
     

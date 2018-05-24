@@ -1,14 +1,15 @@
 from django.shortcuts import render
 from django.views import View
 
-from .models import Cart, CartDetailsManager
+from .models import Cart, CartDetails
 from eCommerce.products.models import Product
 # Create your views here.
 class CartsBaseView(View):
         
         def __init__(self):
-            self.context = {}
-            self.cart_obj = Cart.objects
+            self.context        = {}
+            self.cart_obj       = Cart.objects
+            self.cart_det_obj   = CartDetails.objects
 
 class Carts(CartsBaseView):
     
@@ -20,10 +21,9 @@ class Carts(CartsBaseView):
         """
         try:
             cart = self.cart_obj.get_or_create_cart(request)
-            self.context['cart'] = cart
+            cart_details = self.cart_det_obj.get_cart_items(cart.id)
+            self.context['cart_details'] = cart_details
             response = render(request, 'cart.html', self.context)
-#             if not request.COOKIES.get('cart_id',None):
-#                 response.set_cookie('cart_id', cart.id)
             return response
         except:
             print("500")
@@ -47,15 +47,15 @@ class UpdateCart(CartsBaseView):
                     if not product_obj:
                         raise Product.DoesNotExist
                     cart = self.cart_obj.get_or_create_cart(request)
-                    cart_detail_obj = CartDetailsManager().get_cart_details(cart_id = cart.id,product_id)
+                    cart_detail_obj = self.cart_det_obj.get_cart_details(cart.id,product_id)
                     if cart_detail_obj:
                         cart_detail_obj.update(quantity=quantity)
                     else:
-                        CartDetailsManager().create_cart_details(cart_id = cart.id,product_id)
+                        self.cart_det_obj.create_cart_details(cart.id,product_id)
                 else:
-                    cart_detail_obj = CartDetailsManager().get_cart_details(cart_id = request.session.get('cart_id'),product_id)
+                    cart_detail_obj = self.cart_det_obj.get_cart_details(request.session.get('cart_id'),product_id)
                     cart_detail_obj.delete()       
-                request.session['cart_count'] = CartDetailsManager().get_cart_count(cart_id = cart.id)
+                request.session['cart_count'] = self.cart_det_obj.get_cart_count(request.session.get('cart_id'))
         except Product.DoesNotExist:
             pass
         except Exception as e:

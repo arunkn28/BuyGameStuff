@@ -40,7 +40,8 @@
 					<!-- <li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>
 					<li><a href="checkout.html"><i class="fa fa-crosshairs"></i> Checkout</a></li> -->
 					<li><a href="cart.html"><i class="fa fa-shopping-cart"></i> Cart</a></li>
-					<li><a href="{% url 'account:login'%}"><i class="fa fa-lock"></i> Login</a></li>
+					{% if request.user.is_authenticated %}<li><a href="{% url 'account:logout'%}"><i class="fa fa-lock"></i> Logout</a></li> 
+					{% else %} <a href="{% url 'account:login'%}"><i class="fa fa-lock"></i> Login</a></li> {% endif %}
 				</ul>
 				<form method='GET' action="{% url 'product:productlist' %}" class="form-inline my-2 my-lg-0">
 			      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name='q'>
@@ -218,6 +219,8 @@
 	<script src="{% static 'js/price-range.js' %}"></script>
     <script src="{% static 'js/jquery.prettyPhoto.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
+    {% block jqueryblock %}
+    {% endblock jqueryblock %}
 </body>
 </html>
 	

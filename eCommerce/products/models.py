@@ -58,11 +58,9 @@ class ProductManager(models.Manager):
     def get_product_by_search(self,query):
         """Get the prodcuts based on serach"""
         try:
-            search = Q(name__icontains=query)|Q(description__icontains=query)\
-                    | Q(slug__iconatins=query)
+            search = Q(name__icontains=query)|Q(description__icontains=query)
+                   # | Q(slug__iconatins=query)
             result = self.filter(search).distinct()
-        except Product.DoesNotExist:
-            raise Product.DoesNotExist
         except:
             print('500')
             raise Exception
