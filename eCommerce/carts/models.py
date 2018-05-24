@@ -65,15 +65,15 @@ class Cart(models.Model):
 # m2m_changed.connect(m2m_changed_cart_receiver, sender= Cart.products.through)            
 #              
 
-def pre_save_cart_receiver(sender,instance,*args,**kwargs):
-    """
-    Add the extraCharges Method to take into consideration
-    the shipping charges and taxes
-    """
-    if instance.subtotal> 0.00:
-        instance.total = instance.subtotal #+ extraCharges()
-        
-pre_save.connect(pre_save_cart_receiver, sender=Cart)                    
+# def pre_save_cart_receiver(sender,instance,*args,**kwargs):
+#     """
+#     Add the extraCharges Method to take into consideration
+#     the shipping charges and taxes
+#     """
+#     if instance.subtotal> 0.00:
+#         instance.total = instance.subtotal #+ extraCharges()
+#         
+# pre_save.connect(pre_save_cart_receiver, sender=Cart)                    
 
 class CartDetailsManager(models.Manager):
     
@@ -97,7 +97,11 @@ class CartDetails(models.Model):
     
     def __str__(self):
         return self.cart_id
-    
+
+
+"""
+    Signals to update the total and subtotal in the Cart Details
+"""    
 # def m2m_changed_cartdetails_receiver(sender,instance,action,*args,**kwargs):
 #     """
 #     This is used to update the cart total whenever there is an addition or removal 
