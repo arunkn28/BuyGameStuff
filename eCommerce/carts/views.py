@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views import View
 
-from .models import Cart
+from .models import Cart, CartDetailsManager
 from eCommerce.products.models import Product
 # Create your views here.
 class CartsBaseView(View):
@@ -14,8 +14,9 @@ class Carts(CartsBaseView):
     
     def get(self,request):
         """
-        Method to update th user's carts whenever the user add an item to the 
-        cart
+        View to show the cart page. Get the products in the cart base on whether the user is
+        logged in or not.
+        Think about the idea when user is logged in and not logged in.
         """
         try:
             cart = self.cart_obj.get_or_create_cart(request)
@@ -37,16 +38,26 @@ class UpdateCart(CartsBaseView):
     """
     def post(self,request):
         try:
-            product_id = request.POST.get('product_id')
+            product_id      = request.POST.get('product_id')
+            quantity        = request.POST.get('quantity')
+            remove_product  = request.POST.get('remove_product')
             if product_id:
-                product_obj = Product().get_product_by_id(product_id)
-                if not product_obj:
-                    raise Product.DoesNotExist
-                cart = self.cart_obj.get_or_create_cart(request)
-                if product_obj in cart.products.all():
-                    cart.products.remove(product_obj)
+                if not remove_product:
+                    product_obj = Product().get_product_by_id(product_id)
+                    if not product_obj:
+                        raise Product.DoesNotExist
+                    cart = self.cart_obj.get_or_create_cart(request)
+                    cart_detail_obj = CartDetailsManager().get_cart_details(cart_id = cart.id,product_id)
+                    if cart_detail_obj:
+                        cart_detail_obj.update(quantity=quantity)
+                    else:
+                        CartDetailsManager().create_cart_details(cart_id = cart.id,product_id)
                 else:
-                    cart.products.add(product_obj)
-                    request.session['cart_count'] = cart.products.count()
+                    cart_detail_obj = CartDetailsManager().get_cart_details(cart_id = request.session.get('cart_id'),product_id)
+                    cart_detail_obj.delete()       
+                request.session['cart_count'] = CartDetailsManager().get_cart_count(cart_id = cart.id)
+        except Product.DoesNotExist:
+            pass
         except Exception as e:
             print("There was an issue updating the cart::%s" %(e.message))
+            pass
