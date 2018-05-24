@@ -14,7 +14,7 @@ class LoginView(AccountBaseClass):
     """Login page View"""
     
     def get(self,request):
-        """Replace the code added to test"""
+        """Replace the code, added to test"""
         return render(request,'login.html',{})
     
     def post(self,request):

@@ -17,6 +17,10 @@ class Order(models.Model):
     cart                = models.ForeignKey(Cart)
     subtotal            = models.DecimalField(max_digits=7,decimal_places=2,default=0.00)
     total               = models.DecimalField(max_digits=7,decimal_places=2,default=0.00)
+    created_by          = models.CharField(max_length=50)
+    created_datetime    = models.DateField(auto_now=True)
+    modified_by         = models.DateField(max_length=50)
+    modified_datetime   = models.DateField(auto_now=True)
 
 
 def pre_save_order_id(sender,instance,*args,**kwargs):
