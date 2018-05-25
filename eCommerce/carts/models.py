@@ -1,7 +1,8 @@
 from django.db import models
 from django.conf import settings
-from django.db.models.signals import pre_save, post_save
+from django.db.models.signals import post_save, post_delete, pre_save
 # Create your models here.
+from math import fsum
 from eCommerce.products.models import Product
 User = settings.AUTH_USER_MODEL
 
@@ -39,7 +40,7 @@ class Cart(models.Model):
     #products            = models.ManyToManyField(Product, blank=True)
     subtotal            = models.DecimalField(max_digits=7,decimal_places=2,default=0.00)
     total               = models.DecimalField(max_digits=7,decimal_places=2,default=0.00)
-    created_datetime    = models.DateField(auto_now=True)
+    created_datetime    = models.DateField(auto_now_add=True)
     modified_datetime   = models.DateField(auto_now=True)
     
     objects             = CartManager()
@@ -72,7 +73,7 @@ class Cart(models.Model):
 #     """
 #     if instance.subtotal> 0.00:
 #         instance.total = instance.subtotal #+ extraCharges()
-#         
+#          
 # pre_save.connect(pre_save_cart_receiver, sender=Cart)                    
 
 class CartDetailsManager(models.Manager):
@@ -93,8 +94,9 @@ class CartDetailsManager(models.Manager):
 class CartDetails(models.Model):
     cart                = models.ForeignKey(Cart)
     product_id          = models.ForeignKey(Product)
+    price               = models.DecimalField(max_digits=7,decimal_places=2,default=0.00)
     quantity            = models.IntegerField(default=1)
-    created_datetime    = models.DateField(auto_now=True)
+    created_datetime    = models.DateField(auto_now_add=True)
     modified_datetime   = models.DateField(auto_now=True)
     
     objects             = CartDetailsManager()
@@ -106,12 +108,20 @@ class CartDetails(models.Model):
 """
     Signals to update the total and subtotal in the Cart Details
 """    
-# def post_save_cart_details_receiver(sender,instance,*args,**kwargs):
-#     """
-#     Add the extraCharges Method to take into consideration
-#     the shipping charges and taxes
-#     """
-#     if instance.subtotal> 0.00:
-#         instance.total = instance.subtotal #+ extraCharges()
-#           
-# post_save.connect(post_save_cart_details_receiver, sender=CartDetails)                    
+def post_save_cart_details_receiver(sender,instance,*args,**kwargs):
+    """
+    Add the extraCharges Method to take into consideration
+    the shipping charges and taxes
+    """
+    cart_details_obj = CartDetails.objects.filter(cart_id=instance.cart_id)
+    cart_obj         = Cart.objects.filter(id=instance.cart_id)
+    if cart_details_obj:
+        total = 0
+        for cart in cart_details_obj:
+            total = fsum([total,cart.price*cart.quantity])
+        cart_obj.subtotal = total
+        cart_obj.total = total #+ extraCharges()
+        cart_obj.save()
+            
+post_save.connect(post_save_cart_details_receiver, sender=CartDetails)   
+post_delete.connect(post_save_cart_details_receiver, sender=CartDetails)                   

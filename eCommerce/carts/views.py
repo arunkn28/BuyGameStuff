@@ -42,17 +42,17 @@ class UpdateCart(CartsBaseView):
             quantity        = request.POST.get('quantity')
             remove_product  = request.POST.get('remove_product')
             if product_id:
-                if not remove_product:
+                if not remove_product: # Adding a product to cart
                     product_obj = Product().get_product_by_id(product_id)
                     if not product_obj:
                         raise Product.DoesNotExist
                     cart = self.cart_obj.get_or_create_cart(request)
                     cart_detail_obj = self.cart_det_obj.get_cart_details(cart.id,product_id)
                     if cart_detail_obj:
-                        cart_detail_obj.update(quantity=quantity)
-                    else:
-                        self.cart_det_obj.create_cart_details(cart.id,product_id)
-                else:
+                        cart_detail_obj.update(quantity=quantity) #If in cartdetails already exists for given cattid
+                    else:                                         #and product id update the quantity only
+                        self.cart_det_obj.create_cart_details(cart.id,product_id)#Else this the first time product is being added
+                else: # For removing the product from the cart                    #Create an entry in cart details object
                     cart_detail_obj = self.cart_det_obj.get_cart_details(request.session.get('cart_id'),product_id)
                     cart_detail_obj.delete()       
                 request.session['cart_count'] = self.cart_det_obj.get_cart_count(request.session.get('cart_id'))

@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.conf import settings
 from django.core.validators import RegexValidator
 
 
@@ -23,9 +22,9 @@ class Account(models.Model):
     phone_regex           = RegexValidator(regex=r'^\+91[7-9]\d{9}$')
     phone_number          = models.CharField(validators=[phone_regex], max_length=17, null=True) 
     created_by            = models.CharField(max_length=50, default='account')
-    created_datetime      = models.DateField(auto_now=True)
+    created_datetime      = models.DateField(auto_now_add=True)
     modified_by           = models.CharField(max_length=50, default='')
-    modified_datetime     = models.DateField(null=True)
+    modified_datetime     = models.DateField(null=True,auto_now=True)
     
     objects               = AccountManager()
     def __str__(self):
