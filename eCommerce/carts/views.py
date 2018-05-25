@@ -62,3 +62,11 @@ class UpdateCart(CartsBaseView):
         except Exception as e:
             print("There was an issue updating the cart::%s" %(e.message))
             pass
+
+# class GetCartCount(CartsBaseView):
+#     
+#     def post(self,request):
+#         user = request.user
+#         cart_id = request.session.get('cart_id')
+        
+    

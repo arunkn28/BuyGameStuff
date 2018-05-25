@@ -9,8 +9,12 @@ User = settings.AUTH_USER_MODEL
 
 class CartManager(models.Manager):
     
-    def create_cart_obj(self,user):
-        return self.create(user=user)
+    def create_cart_obj(self, user=None):
+        user_obj = None
+        if user is not None:
+            if user.is_authenticated():
+                user_obj = user
+        return self.model.objects.create(user=user_obj)
     
     def get_cart_by_id(self,cart_id):
         return self.get_queryset().filter(id=cart_id)
@@ -49,33 +53,6 @@ class Cart(models.Model):
         return str(self.id)
 
     
-    
-# def m2m_changed_cart_receiver(sender,instance,action,*args,**kwargs):
-#     """
-#     This is used to update the cart total whenever there is an addition or removal 
-#     from the cart
-#     """
-#     if action == 'post_add' or action == 'post_remove' or action == 'post_clear':
-#         products = instance.objects.all()
-#         total = 0
-#         for product in products:
-#             total += product.price
-#         instance.subtotal = total
-#         instance.save()
-#         
-# m2m_changed.connect(m2m_changed_cart_receiver, sender= Cart.products.through)            
-#              
-
-# def pre_save_cart_receiver(sender,instance,*args,**kwargs):
-#     """
-#     Add the extraCharges Method to take into consideration
-#     the shipping charges and taxes
-#     """
-#     if instance.subtotal> 0.00:
-#         instance.total = instance.subtotal #+ extraCharges()
-#          
-# pre_save.connect(pre_save_cart_receiver, sender=Cart)                    
-
 class CartDetailsManager(models.Manager):
     
     def get_cart_details(self,cart_id,product_id):
