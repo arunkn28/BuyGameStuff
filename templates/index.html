@@ -1,550 +1,232 @@
 {% extends 'base.html'%}
 {% load static %}
+
 {% block content%}
-<meta charset="utf-8">
-	<section >
-		<div class="container" style="padding-top: 25px;>
-			<div class="row">
-				<div class="col-sm-3">
-					<div class="left-sidebar">
-						<h2>Category</h2>
-						<div class="panel-group category-products" id="accordian"><!--category-productsr-->
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<h4 class="panel-title">
-										<a data-toggle="collapse" data-parent="#accordian" href="#sportswear">
-											<span class="badge pull-right"><i class="fa fa-plus"></i></span>
-											Sportswear
-										</a>
-									</h4>
-								</div>
-								<div id="sportswear" class="panel-collapse collapse">
-									<div class="panel-body">
-										<ul>
-											<li><a href="#">Nike </a></li>
-											<li><a href="#">Under Armour </a></li>
-											<li><a href="#">Adidas </a></li>
-											<li><a href="#">Puma</a></li>
-											<li><a href="#">ASICS </a></li>
-										</ul>
-									</div>
-								</div>
-							</div>
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<h4 class="panel-title">
-										<a data-toggle="collapse" data-parent="#accordian" href="#mens">
-											<span class="badge pull-right"><i class="fa fa-plus"></i></span>
-											Mens
-										</a>
-									</h4>
-								</div>
-								<div id="mens" class="panel-collapse collapse">
-									<div class="panel-body">
-										<ul>
-											<li><a href="#">Fendi</a></li>
-											<li><a href="#">Guess</a></li>
-											<li><a href="#">Valentino</a></li>
-											<li><a href="#">Dior</a></li>
-											<li><a href="#">Versace</a></li>
-											<li><a href="#">Armani</a></li>
-											<li><a href="#">Prada</a></li>
-											<li><a href="#">Dolce and Gabbana</a></li>
-											<li><a href="#">Chanel</a></li>
-											<li><a href="#">Gucci</a></li>
-										</ul>
-									</div>
-								</div>
-							</div>
-							
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<h4 class="panel-title">
-										<a data-toggle="collapse" data-parent="#accordian" href="#womens">
-											<span class="badge pull-right"><i class="fa fa-plus"></i></span>
-											Womens
-										</a>
-									</h4>
-								</div>
-								<div id="womens" class="panel-collapse collapse">
-									<div class="panel-body">
-										<ul>
-											<li><a href="#">Fendi</a></li>
-											<li><a href="#">Guess</a></li>
-											<li><a href="#">Valentino</a></li>
-											<li><a href="#">Dior</a></li>
-											<li><a href="#">Versace</a></li>
-										</ul>
-									</div>
-								</div>
-							</div>
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<h4 class="panel-title"><a href="#">Kids</a></h4>
-								</div>
-							</div>
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<h4 class="panel-title"><a href="#">Fashion</a></h4>
-								</div>
-							</div>
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<h4 class="panel-title"><a href="#">Households</a></h4>
-								</div>
-							</div>
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<h4 class="panel-title"><a href="#">Interiors</a></h4>
-								</div>
-							</div>
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<h4 class="panel-title"><a href="#">Clothing</a></h4>
-								</div>
-							</div>
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<h4 class="panel-title"><a href="#">Bags</a></h4>
-								</div>
-							</div>
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<h4 class="panel-title"><a href="#">Shoes</a></h4>
-								</div>
-							</div>
-						</div><!--/category-products-->
-						<div class="shipping text-center"><!--shipping-->
-							<img src="{% static 'images/home/shipping.jpg' %}" alt="" />
-						</div><!--/shipping-->
-					
-					</div>
-				</div>
-				
-				<div class="col-sm-9 padding-right">
-					<div class="features_items"><!--features_items-->
-						<h2 class="title text-center">Featured Items</h2>
-						<!-- {loop starts} -->
-						
-						{% for product in featured_products%}
-						<div class="col-sm-4">
-							<div class="product-image-wrapper">
-								<div class="single-products">
-										<div class="productinfo text-center">
-											<a href={{product.get_absolute_url}}><img src="{{product.image.url}}"class="img-thumbnail" alt="" /></a>
-											<h2>${{product.price}}</h2>
-											<p><b>{{product.name}}</b></p>
-											<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Buy Now</a>
-										</div>
-										<!-- <div class="product-overlay">
-											<div class="overlay-content">
-												<h2>${{product.price}}</h2>
-												<p>{{product.name}}</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-										</div> -->
-										<img src="{% static 'images/home/new.png' %}" class="new" alt="" />
-								</div>
-								<div class="choose">
-									<ul class="">
-										<li><a href="#"><i class="fa fa-cart-plus"></i>Add to Cart</a></li>
-									</ul>
-								</div>
-							</div>
-						</div>
-						{% endfor %}
-						<!-- {loop ends} -->
-						
-					</div><!--features_items-->
-					
-					<div class="category-tab"><!--category-tab-->
-						<div class="col-sm-12">
-							<ul class="nav nav-tabs">
-								<li class="active"><a href="#tshirt" data-toggle="tab">T-Shirt</a></li>
-								<li><a href="#blazers" data-toggle="tab">Blazers</a></li>
-								<li><a href="#sunglass" data-toggle="tab">Sunglass</a></li>
-								<li><a href="#kids" data-toggle="tab">Kids</a></li>
-								<li><a href="#poloshirt" data-toggle="tab">Polo shirt</a></li>
-							</ul>
-						</div>
-						<div class="tab-content">
-							<div class="tab-pane fade active in" id="tshirt" >
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="{% static 'images/home/gallery1.jpg' %}" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="{% static 'images/home/gallery2.jpg' %}" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="{% static 'images/home/gallery3.jpg' %}" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="{% static 'images/home/gallery4.jpg' %}" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-							</div>
-							
-							<div class="tab-pane fade" id="blazers" >
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="{% static 'images/home/gallery4.jpg' %}" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="{% static 'images/home/gallery3.jpg' %}" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="{% static 'images/home/gallery2.jpg' %}" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="{% static 'images/home/gallery1.jpg' %}" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-							</div>
-							
-							<div class="tab-pane fade" id="sunglass" >
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="{% static 'images/home/gallery3.jpg' %}" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="{% static 'images/home/gallery4.jpg' %}" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="{% static 'images/home/gallery1.jpg' %}" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="{% static 'images/home/gallery2.jpg' %}" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-							</div>
-							
-							<div class="tab-pane fade" id="kids" >
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="{% static 'images/home/gallery1.jpg' %}" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="{% static 'images/home/gallery2.jpg' %}" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="{% static 'images/home/gallery3.jpg' %}" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="{% static 'images/home/gallery4.jpg' %}" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-							</div>
-							
-							<div class="tab-pane fade" id="poloshirt" >
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="{% static 'images/home/gallery2.jpg' %}" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="{% static 'images/home/gallery4.jpg' %}" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="{% static 'images/home/gallery3.jpg' %}" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="{% static 'images/home/gallery1.jpg' %}" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div><!--/category-tab-->
-					
-					<div class="recommended_items"><!--recommended_items-->
-						<h2 class="title text-center">recommended items</h2>
-						
-						<div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
-							<div class="carousel-inner">
-								<div class="item active">	
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="{% static 'images/home/recommend1.jpg' %}" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-												</div>
-												
-											</div>
-										</div>
-									</div>
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="{% static 'images/home/recommend2.jpg' %}" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-												</div>
-												
-											</div>
-										</div>
-									</div>
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="{% static 'images/home/recommend3.jpg' %}" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-												</div>
-												
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="item">	
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="{% static 'images/home/recommend1.jpg' %}" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-												</div>
-												
-											</div>
-										</div>
-									</div>
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="{% static 'images/home/recommend2.jpg' %}" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-												</div>
-												
-											</div>
-										</div>
-									</div>
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="{% static 'images/home/recommend3.jpg' %}" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-												</div>
-												
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							 <a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
-								<i class="fa fa-angle-left"></i>
-							  </a>
-							  <a class="right recommended-item-control" href="#recommended-item-carousel" data-slide="next">
-								<i class="fa fa-angle-right"></i>
-							  </a>			
-						</div>
-					</div><!--/recommended_items-->
-					
-				</div>
-			</div>
-		</div>
-	</section>
-	
+    <div id="all">
+
+        <div id="content">
+
+            <div class="container">
+                <div class="col-md-12">
+                    <div id="main-slider">
+                        <div class="item">
+                            <img src="{% static 'img/main-slider1.jpg' %}" alt="" class="img-responsive">
+                        </div>
+                        <div class="item">
+                            <img class="img-responsive" src="{% static 'img/main-slider2.jpg' %}" alt="">
+                        </div>
+                        <div class="item">
+                            <img class="img-responsive" src="{% static 'img/main-slider3.jpg' %}" alt="">
+                        </div>
+                        <div class="item">
+                            <img class="img-responsive" src="{% static 'img/main-slider4.jpg' %}" alt="">
+                        </div>
+                    </div>
+                    <!-- /#main-slider -->
+                </div>
+            </div>
+
+            <!-- *** ADVANTAGES HOMEPAGE ***
+ _________________________________________________________ -->
+            <div id="advantages">
+
+                <div class="container">
+                    <div class="same-height-row">
+                        <div class="col-sm-4">
+                            <div class="box same-height clickable">
+                                <div class="icon"><i class="fa fa-heart"></i>
+                                </div>
+
+                                <h3><a href="#">We love our customers</a></h3>
+                                <p>We are known to provide best possible service ever</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="box same-height clickable">
+                                <div class="icon"><i class="fa fa-tags"></i>
+                                </div>
+
+                                <h3><a href="#">Best prices</a></h3>
+                                <p>You can check that the height of the boxes adjust when longer text like this one is used in one of them.</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="box same-height clickable">
+                                <div class="icon"><i class="fa fa-thumbs-up"></i>
+                                </div>
+
+                                <h3><a href="#">100% satisfaction guaranteed</a></h3>
+                                <p>Free returns on everything for 3 months.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.row -->
+
+                </div>
+                <!-- /.container -->
+
+            </div>
+            <!-- /#advantages -->
+
+            <!-- *** ADVANTAGES END *** -->
+
+            <!-- *** HOT PRODUCT SLIDESHOW ***
+ _________________________________________________________ -->
+            <div id="hot">
+
+                <div class="box">
+                    <div class="container">
+                        <div class="col-md-12">
+                            <h2>Hot this week</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container">
+                    <div class="product-slider">
+                    {% for product in featured_products%}
+                        <div class="item">
+                            <div class="product">
+                                <div class="flip-container">
+                                    <div class="flipper">
+                                        <div class="front">
+                                            <a href="{{product.get_absolute_url}}">
+                                                <img src="{{product.image.url}}" alt="" class="img-responsive">
+                                            </a>
+                                        </div>
+                                        <div class="back">
+                                            <a href="{{product.get_absolute_url}}">
+                                                <img src="{{product.image.url}}" alt="" class="img-responsive">
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a href="{{product.get_absolute_url}}" class="">
+                                    <img src="{{product.image.url}}" alt="" class="img-responsive">
+                                </a>
+                                <div class="text">
+                                    <h3><a href="detail.html">{{product.name}}</a></h3>
+                                    <p class="price"><del>&#8377;{{product.price}}</del> &#8377;{{product.price}}</p>
+                                </div>
+                                <!-- /.text -->
+
+                                <div class="ribbon sale">
+                                    <div class="theribbon">SALE</div>
+                                    <div class="ribbon-background"></div>
+                                </div>
+                                <!-- /.ribbon -->
+
+                                <div class="ribbon new">
+                                    <div class="theribbon">NEW</div>
+                                    <div class="ribbon-background"></div>
+                                </div>
+                                <!-- /.ribbon -->
+
+                                <div class="ribbon gift">
+                                    <div class="theribbon">GIFT</div>
+                                    <div class="ribbon-background"></div>
+                                </div>
+                                <!-- /.ribbon -->
+                            </div>
+                            <!-- /.product -->
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <!-- /.product-slider -->
+                </div>
+                <!-- /.container -->
+
+            </div>
+            <!-- /#hot -->
+
+            <!-- *** HOT END *** -->
+
+            <!-- *** GET INSPIRED ***
+ _________________________________________________________ -->
+            <div class="container" data-animate="fadeInUpBig">
+                <div class="col-md-12">
+                    <div class="box slideshow">
+                        <h3>Get Inspired</h3>
+                        <p class="lead">Get the inspiration from our world class designers</p>
+                        <div id="get-inspired" class="owl-carousel owl-theme">
+                            <div class="item">
+                                <a href="#">
+                                    <img src="{% static 'img/getinspired1.jpg' %}" alt="Get inspired" class="img-responsive">
+                                </a>
+                            </div>
+                            <div class="item">
+                                <a href="#">
+                                    <img src="{% static 'img/getinspired2.jpg' %}" alt="Get inspired" class="img-responsive">
+                                </a>
+                            </div>
+                            <div class="item">
+                                <a href="#">
+                                    <img src="{% static 'img/getinspired3.jpg' %}" alt="Get inspired" class="img-responsive">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- *** GET INSPIRED END *** -->
+
+            <!-- *** BLOG HOMEPAGE ***
+ _________________________________________________________ -->
+
+            <div class="box text-center" data-animate="fadeInUp">
+                <div class="container">
+                    <div class="col-md-12">
+                        <h3 class="text-uppercase">From our blog</h3>
+
+                        <p class="lead">What's new in the world of fashion? <a href="blog.html">Check our blog!</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+
+                <div class="col-md-12" data-animate="fadeInUp">
+
+                    <div id="blog-homepage" class="row">
+                        <div class="col-sm-6">
+                            <div class="post">
+                                <h4><a href="post.html">Fashion now</a></h4>
+                                <p class="author-category">By <a href="#">John Slim</a> in <a href="">Fashion and style</a>
+                                </p>
+                                <hr>
+                                <p class="intro">Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean
+                                    ultricies mi vitae est. Mauris placerat eleifend leo.</p>
+                                <p class="read-more"><a href="post.html" class="btn btn-primary">Continue reading</a>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="post">
+                                <h4><a href="post.html">Who is who - example blog post</a></h4>
+                                <p class="author-category">By <a href="#">John Slim</a> in <a href="">About Minimal</a>
+                                </p>
+                                <hr>
+                                <p class="intro">Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean
+                                    ultricies mi vitae est. Mauris placerat eleifend leo.</p>
+                                <p class="read-more"><a href="post.html" class="btn btn-primary">Continue reading</a>
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <!-- /#blog-homepage -->
+                </div>
+            </div>
+            <!-- /.container -->
+
+            <!-- *** BLOG HOMEPAGE END *** -->
+
+
+        </div>
+        <!-- /#content -->
 {% endblock content%}

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 
 from .models import Cart, CartDetails
@@ -11,7 +11,7 @@ class CartsBaseView(View):
             self.cart_obj       = Cart.objects
             self.cart_det_obj   = CartDetails.objects
 
-class Carts(CartsBaseView):
+class CartView(CartsBaseView):
     
     def get(self,request):
         """
@@ -38,12 +38,12 @@ class UpdateCart(CartsBaseView):
     """
     def post(self,request):
         try:
-            product_id      = request.POST.get('product_id')
+            product_id      = int(request.POST.get('product_id'))
             quantity        = request.POST.get('quantity')
             remove_product  = request.POST.get('remove_product')
             if product_id:
                 if not remove_product: # Adding a product to cart
-                    product_obj = Product().get_product_by_id(product_id)
+                    product_obj = Product.objects.get_product_by_id(product_id)
                     if not product_obj:
                         raise Product.DoesNotExist
                     cart = self.cart_obj.get_or_create_cart(request)
@@ -51,11 +51,12 @@ class UpdateCart(CartsBaseView):
                     if cart_detail_obj:
                         cart_detail_obj.update(quantity=quantity) #If in cartdetails already exists for given cattid
                     else:                                         #and product id update the quantity only
-                        self.cart_det_obj.create_cart_details(cart.id,product_id)#Else this the first time product is being added
+                        self.cart_det_obj.create_cart_details(cart,product_obj)#Else this the first time product is being added
                 else: # For removing the product from the cart                    #Create an entry in cart details object
                     cart_detail_obj = self.cart_det_obj.get_cart_details(request.session.get('cart_id'),product_id)
                     cart_detail_obj.delete()       
                 request.session['cart_count'] = self.cart_det_obj.get_cart_count(request.session.get('cart_id'))
+                return redirect("/")
         except Product.DoesNotExist:
             pass
         except Exception as e:

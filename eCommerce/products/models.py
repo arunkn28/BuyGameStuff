@@ -16,9 +16,9 @@ class Category(models.Model):
     description             = models.TextField(max_length=100)
     image                   = models.ImageField(default=None,blank=True)
     created_by              = models.CharField(max_length=50,default=None)
-    created_datetime        = models.DateTimeField(default=None,auto_now_add=True)
+    created_datetime        = models.DateTimeField(auto_now_add=True)
     modified_by             = models.CharField(max_length=50,null=True,default=None,blank=True)
-    modified_datetime       = models.DateTimeField(null=True,default=None,blank=True,auto_now=True)
+    modified_datetime       = models.DateTimeField(null=True,blank=True,auto_now=True)
     
     def __str__(self):
         return u"%s" % (self.get_name_display())
@@ -87,9 +87,9 @@ class Product(models.Model):
     weight              = models.DecimalField(decimal_places=2,max_digits=7,default=0.00)
     units_in_stock      = models.IntegerField(default=None)
     created_by          = models.CharField(max_length=50,default=None)
-    created_datetime    = models.DateTimeField(default=None,auto_now_add=True)
+    created_datetime    = models.DateTimeField(auto_now_add=True)
     modified_by         = models.CharField(max_length=50,null=True,default=None,blank=True)
-    modified_datetime   = models.DateTimeField(null=True,default=None,blank=True,auto_now=True)
+    modified_datetime   = models.DateTimeField(null=True,blank=True,auto_now=True)
     
     objects             = ProductManager()
     

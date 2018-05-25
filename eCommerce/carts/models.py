@@ -36,7 +36,7 @@ class Cart(models.Model):
     Should have a foreign key to cart and for each product in cart will have a
     record having the quantity.
     """
-    user                = models.ForeignKey(User, null =True)
+    user                = models.ForeignKey(User, null =True, blank=True)
     #products            = models.ManyToManyField(Product, blank=True)
     subtotal            = models.DecimalField(max_digits=7,decimal_places=2,default=0.00)
     total               = models.DecimalField(max_digits=7,decimal_places=2,default=0.00)
@@ -81,8 +81,8 @@ class CartDetailsManager(models.Manager):
     def get_cart_details(self,cart_id,product_id):
         return self.filter(product_id=product_id,cart_id=cart_id)        
     
-    def create_cart_details(self,cart_id,product_id):
-        return self.create(cart_id=cart_id,product_id=product_id )
+    def create_cart_details(self,cart,product):
+        return self.create(cart=cart,product=product,price=product.price )
     
     def get_cart_count(self,cart_id):
         return self.get_queryset().filter(cart_id=cart_id).count()    
@@ -93,7 +93,7 @@ class CartDetailsManager(models.Manager):
     
 class CartDetails(models.Model):
     cart                = models.ForeignKey(Cart)
-    product_id          = models.ForeignKey(Product)
+    product             = models.ForeignKey(Product)
     price               = models.DecimalField(max_digits=7,decimal_places=2,default=0.00)
     quantity            = models.IntegerField(default=1)
     created_datetime    = models.DateField(auto_now_add=True)
@@ -102,7 +102,7 @@ class CartDetails(models.Model):
     objects             = CartDetailsManager()
     
     def __str__(self):
-        return self.cart_id
+        return str(self.cart_id)
 
 
 """
@@ -114,14 +114,11 @@ def post_save_cart_details_receiver(sender,instance,*args,**kwargs):
     the shipping charges and taxes
     """
     cart_details_obj = CartDetails.objects.filter(cart_id=instance.cart_id)
-    cart_obj         = Cart.objects.filter(id=instance.cart_id)
     if cart_details_obj:
         total = 0
         for cart in cart_details_obj:
             total = fsum([total,cart.price*cart.quantity])
-        cart_obj.subtotal = total
-        cart_obj.total = total #+ extraCharges()
-        cart_obj.save()
+        Cart.objects.filter(pk=instance.cart_id).update(subtotal=total,total=total)
             
 post_save.connect(post_save_cart_details_receiver, sender=CartDetails)   
 post_delete.connect(post_save_cart_details_receiver, sender=CartDetails)                   
