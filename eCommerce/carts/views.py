@@ -1,8 +1,11 @@
+import json
+
 from django.shortcuts import render, redirect
 from django.views import View
 
 from .models import Cart, CartDetails
 from eCommerce.products.models import Product
+from django.http.response import HttpResponse
 # Create your views here.
 class CartsBaseView(View):
         
@@ -25,8 +28,20 @@ class CartView(CartsBaseView):
             else:
                 cart = self.cart_obj.get_cart_by_id(request.session.get('cart_id',None)) 
             
-            cart_details = self.cart_det_obj.get_cart_items(cart.first().id)
-            self.context['cart_details'] = cart_details
+            cart_details_list =[]
+            if cart:
+                cart_details = self.cart_det_obj.get_cart_items(cart.id)
+                for cart in cart_details:
+                    product = Product.objects.filter(id=cart.product_id)
+                    cart_temp_dict = {}
+                    cart_temp_dict['product_name']  = product.first().name
+                    cart_temp_dict['product_image'] = product.first().image
+                    cart_temp_dict['quantity']      = cart.quantity
+                    cart_temp_dict['price']         = product.first().price
+                    cart_temp_dict[cart.id]         = cart.id
+                    cart_details_list.append(cart_temp_dict)
+                    
+                self.context['cart_details'] = cart_details_list
             response = render(request, 'cart.html', self.context)
             return response
         except:
@@ -72,20 +87,14 @@ class UpdateCart(CartsBaseView):
             pass
 
 
-"""
-Ajax call to get the count of items in cart.
-Before getting count get the cart_id form session, if exists,
-1. Get the last cart details for this user and update the new cart details with that aong with user
-and delete the previous records of cart and cart details 
-2. If last cart not available update the user for the present cart
-
-if No cart id exists in session
-1. Get cart count for this user
-"""
-# class GetCartCount(CartsBaseView):
-#     
-#     def post(self,request):
-#         user = request.user
-#         cart_id = request.session.get('cart_id')
-        
-    
+class GetCartCount(CartsBaseView):
+     
+    def get(self,request):
+        cart_id = request.session.get('cart_id')
+            
+        if request.user.is_authenticated():
+            cart = self.cart_obj.get_cart_by_user(request.user)
+        else:
+            cart = self.cart_obj.get_cart_by_id(cart_id)
+        cart_count = self.cart_det_obj.filter(cart_id=cart.first().id).count() if cart else 0
+        return HttpResponse(json.dumps({'cart_count': cart_count}), content_type="application/json")

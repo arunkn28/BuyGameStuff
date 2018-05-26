@@ -126,7 +126,7 @@
                         <i class="fa fa-search"></i>
                     </button>
                     <a class="btn btn-default navbar-toggle" href="{% url 'cart:cartview' %}">
-                        <i class="fa fa-shopping-cart"></i>  <span class="hidden-xs">3 items in cart</span>
+                        <i class="fa fa-shopping-cart"></i>  <span class="hidden-xs"><span class='cart_count'></span> items in cart</span>
                     </a>
                 </div>
             </div>
@@ -295,7 +295,7 @@
             <div class="navbar-buttons">
 
                 <div class="navbar-collapse collapse right" id="basket-overview">
-                    <a href="{% url 'cart:cartview' %}" class="btn btn-primary navbar-btn"><i class="fa fa-shopping-cart"></i><span class="hidden-sm">3 items in cart</span></a>
+                    <a href="{% url 'cart:cartview' %}" class="btn btn-primary navbar-btn"><i class="fa fa-shopping-cart"></i><span class="hidden-sm"><span class='cart_count'></span> items in cart</span></a>
                 </div>
                 <!--/.nav-collapse -->
 
@@ -508,7 +508,22 @@
     <script src="{% static 'js/bootstrap-hover-dropdown.js' %}"></script>
     <script src="{% static 'js/owl.carousel.min.js' %}"></script>
     <script src="{% static 'js/front.js' %}"></script>
-
+	
+	<script>
+			
+	$.ajax({
+	    url: "{% url 'cart:cartcount' %}",
+	    type: "GET",
+	    cache:false,
+	    dataType: "json",
+	    success: function(resp){
+	       $('.cart_count').text(resp.cart_count);
+	    },
+	    error: function(HttpRequest, textStatus, errorThrown) { 
+	        //alert("Status: " + textStatus); alert("Error: " + errorThrown); 
+	    }       
+	});
+	</script>
 {% block javascriptblock %}
 
 {% endblock javascriptblock%}

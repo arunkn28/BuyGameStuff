@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save, post_delete, pre_save
+from django.db.models.signals import post_save, post_delete
 # Create your models here.
 from math import fsum
 from eCommerce.products.models import Product
@@ -23,13 +23,8 @@ class CartManager(models.Manager):
         return self.filter(user_id=user_id)
     
     def get_or_create_cart(self,request):
-        #user = request.user
         cart_id = request.session.get('cart_id',None)
-        #if not user:
         qs = self.get_cart_by_id(cart_id)
-        #else:    
-        #   qs=self.get_cart_by_user(user)
-            
         if qs.count()==1:
             cart_obj = qs.first()
             if request.user.is_authenticated() and not cart_obj.user:
@@ -49,7 +44,6 @@ class Cart(models.Model):
     record having the quantity.
     """
     user                = models.ForeignKey(User, null =True, blank=True)
-    #products            = models.ManyToManyField(Product, blank=True)
     subtotal            = models.DecimalField(max_digits=7,decimal_places=2,default=0.00)
     total               = models.DecimalField(max_digits=7,decimal_places=2,default=0.00)
     created_datetime    = models.DateField(auto_now_add=True)
