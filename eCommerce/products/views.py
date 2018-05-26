@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http.response import HttpResponse, Http404
+from django.http.response import Http404
 from django.views import View
 
 from .models import Product, Category
@@ -43,6 +43,7 @@ class ProductList(ProductBaseView):
     Search can be based on query string and category wise losting will take it from
     regex slug"""
     
+    """Use concept of Pagination"""
     def get(self,request, category_name=None):
         """Make a list of products and add it to the context"""
         try:

@@ -77,4 +77,5 @@ class RegisterView(AccountBaseClass):
         except db.IntegrityError:
             print("render the registeration page with error saying user already exists")
         except Exception as ex:
-            print("500::"+ex.message)       
+            print("500::"+ex.message)   
+            
