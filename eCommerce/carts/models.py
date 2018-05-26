@@ -1,10 +1,9 @@
 from django.db import models
-from django.conf import settings
+from django.contrib.auth.models import User
 from django.db.models.signals import post_save, post_delete, pre_save
 # Create your models here.
 from math import fsum
 from eCommerce.products.models import Product
-User = settings.AUTH_USER_MODEL
 
 
 class CartManager(models.Manager):
@@ -18,10 +17,19 @@ class CartManager(models.Manager):
     
     def get_cart_by_id(self,cart_id):
         return self.get_queryset().filter(id=cart_id)
-     
+    
+    def get_cart_by_user(self,user):
+        user_id = User.objects.filter(username=user)
+        return self.filter(user_id=user_id)
+    
     def get_or_create_cart(self,request):
+        #user = request.user
         cart_id = request.session.get('cart_id',None)
+        #if not user:
         qs = self.get_cart_by_id(cart_id)
+        #else:    
+        #   qs=self.get_cart_by_user(user)
+            
         if qs.count()==1:
             cart_obj = qs.first()
             if request.user.is_authenticated() and not cart_obj.user:
@@ -65,7 +73,7 @@ class CartDetailsManager(models.Manager):
         return self.get_queryset().filter(cart_id=cart_id).count()    
     
     def get_cart_items(self,cart_id):
-        return self.get_queryset().filter(cart_id)
+        return self.get_queryset().filter(cart_id=cart_id)
     
     
 class CartDetails(models.Model):

@@ -6,6 +6,8 @@ from django.shortcuts import render, redirect
 
 from django.utils.http import is_safe_url
 
+from eCommerce.carts.backend.backend import CartBackend
+
 from .models import Account
 
 class AccountBaseClass(View):
@@ -25,14 +27,16 @@ class LoginView(AccountBaseClass):
         """Authenticate and log in a user and redirect him to the home page.
         If not authenticated reload the pgae with error in the context dict"""
     
-        try:    
+        try:
             username     = request.POST['email']
             password     = request.POST['password']
             next_        = request.GET.get('next')
             next_post    = request.GET.get('next')
+            
             next_url = next_ or next_post
             user = authenticate(request, username=username, password=password)
             if user is not None:
+                CartBackend().updateCartWithUser(user, request.session.get('cart_id'))
                 login(request, user)
                 if is_safe_url(next_url, request.get_host()):
                     redirect(next_url)

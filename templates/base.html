@@ -81,10 +81,10 @@
                     <div class="modal-body">
                         <form action="{% url 'account:login'%}" method="post">{% csrf_token %}
                             <div class="form-group">
-                                <input type="text" class="form-control" id="email" placeholder="email">
+                                <input type="text" class="form-control" id="email" placeholder="email" name="email">
                             </div>
                             <div class="form-group">
-                                <input type="password" class="form-control" id="password" placeholder="password">
+                                <input type="password" class="form-control" id="password" placeholder="password" name="password">
                             </div>
 
                             <p class="text-center">
@@ -295,7 +295,7 @@
             <div class="navbar-buttons">
 
                 <div class="navbar-collapse collapse right" id="basket-overview">
-                    <a href="basket.html" class="btn btn-primary navbar-btn"><i class="fa fa-shopping-cart"></i><span class="hidden-sm">3 items in cart</span></a>
+                    <a href="{% url 'cart:cartview' %}" class="btn btn-primary navbar-btn"><i class="fa fa-shopping-cart"></i><span class="hidden-sm">3 items in cart</span></a>
                 </div>
                 <!--/.nav-collapse -->
 
