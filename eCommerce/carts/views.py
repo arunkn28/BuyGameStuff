@@ -30,7 +30,7 @@ class CartView(CartsBaseView):
             
             cart_details_list =[]
             if cart:
-                cart_details = self.cart_det_obj.get_cart_items(cart.id)
+                cart_details = self.cart_det_obj.get_cart_items(cart.first().id)
                 for cart in cart_details:
                     product = Product.objects.filter(id=cart.product_id)
                     cart_temp_dict = {}

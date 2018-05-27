@@ -29,7 +29,7 @@ class ProductDetail(ProductBaseView):
             product_details = self.product_obj.get_product_by_slug(slug)
             self.context['product_details'] = product_details
         except Product.DoesNotExist:
-            return Http404("No such product")
+            raise Http404("No such product")
         except Exception:
             """render 500"""
             pass
@@ -47,7 +47,7 @@ class ProductList(ProductBaseView):
     def get(self,request, category_name=None):
         """Make a list of products and add it to the context"""
         try:
-            if category_name:
+            if category_name: # Have to test this part and implememt preoperly
                 category_id = Category.objects.filter(name=category_name).values('pk')[0].get('pk')
                 all_products = self.product_obj.get(category_id=category_id)
             else:

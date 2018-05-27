@@ -11,9 +11,13 @@
                         <h1>New account</h1>
 
                         <p class="lead">Not our registered customer yet?</p>
-                        <p>With registration with us new world of fashion, fantastic discounts and much more opens to you! The whole process will not take you more than a minute!</p>
-                        <p class="text-muted">If you have any questions, please feel free to <a href="contact.html">contact us</a>, our customer service center is working for you 24/7.</p>
-
+                        <!-- <p>With registration with us new world of fashion, fantastic discounts and much more opens to you! The whole process will not take you more than a minute!</p>
+                        <p class="text-muted">If you have any questions, please feel free to <a href="contact.html">contact us</a>, our customer service center is working for you 24/7.</p>-->
+                        {% if user_exists %}
+                        	<div class="alert alert-danger" role="alert">
+								  Email already exists !
+							</div>
+						{% endif %}	
                         <hr>
 
                         <form action="{% url 'account:register' %}" method="post">{% csrf_token %}
@@ -22,7 +26,7 @@
                                 <input type="text" class="form-control" id="first_name" name="first_name">
                             </div>
                             <div class="form-group">
-                                <label for="name">Name</label>
+                                <label for="name">Last Name</label>
                                 <input type="text" class="form-control" id="last_name" name="last_name">
                             </div>
                             <div class="form-group">
@@ -45,12 +49,14 @@
                         <h1>Login</h1>
 
                         <p class="lead">Already our customer?</p>
-                        <p class="text-muted">Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies
-                            mi vitae est. Mauris placerat eleifend leo.</p>
-
+							{% if invalid_user%}
+								<div class="alert alert-danger" role="alert">
+								  Username or password does not match !
+								</div>
+							{% endif %}			
                         <hr>
 
-                        <form action="{% url 'account:login' %}" method="post">
+                        <form action="{% url 'account:login' %}" method="post">{% csrf_token %}
                             <div class="form-group">
                                 <label for="email">Email</label>
                                 <input type="text" class="form-control" id="email" name="email">

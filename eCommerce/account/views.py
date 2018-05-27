@@ -20,8 +20,11 @@ class LoginView(AccountBaseClass):
     
     def get(self,request):
         """Replace the code, added to test"""
-        return render(request,'login.html',{})
-    
+        try:
+            return render(request,'login.html',{})
+        except:
+            pass
+        
     def post(self,request):
         
         """Authenticate and log in a user and redirect him to the home page.
@@ -75,7 +78,7 @@ class RegisterView(AccountBaseClass):
                 self.account_obj.create_account(user.id ,first_name, last_name, email)
                 return redirect('/')
         except db.IntegrityError:
-            print("render the registeration page with error saying user already exists")
+            return render(request,'login.html',{'user_exists':True})
         except Exception as ex:
             print("500::"+ex.message)   
             

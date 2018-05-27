@@ -39,13 +39,13 @@
                                         <tr>
                                             <td>
                                                 <a href="#">
-                                                    <img src="img/detailsquare.jpg" alt="White Blouse Armani">
+                                                    <img src="{{cart.product_image.url}}" alt="White Blouse Armani">
                                                 </a>
                                             </td>
                                             <td><a href="#">{{cart.product_name}}</a>
                                             </td>
                                             <td>
-                                                <input type="number" value="{{cart.quantity}}" class="form-control">
+                                                <input type="number" min="0" value="{{cart.quantity}}" class="form-control">
                                             </td>
                                             <td>&#8377;{{cart.price}}</td>
                                             <td>&#8377;0.00</td>

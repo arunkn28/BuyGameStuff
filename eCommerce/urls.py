@@ -34,6 +34,9 @@ urlpatterns = [
     
 ]
 
+handler404 = 'eCommerce.views.page_not_found_custom'    
+handler500 = 'eCommerce.views.page_error_found_custom' 
+
 if settings.DEBUG:
     urlpatterns = urlpatterns + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,1 +1,5 @@
 /** Your theme modifications here **/
+
+.home-product{
+	height: 200px !important;
+}
