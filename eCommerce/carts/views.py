@@ -36,12 +36,14 @@ class CartView(CartsBaseView):
                     cart_temp_dict = {}
                     cart_temp_dict['product_name']  = product.first().name
                     cart_temp_dict['product_image'] = product.first().image
+                    cart_temp_dict['product_url']   = product.first().get_absolute_url()
                     cart_temp_dict['quantity']      = cart.quantity
                     cart_temp_dict['price']         = product.first().price
                     cart_temp_dict[cart.id]         = cart.id
                     cart_details_list.append(cart_temp_dict)
                     
                 self.context['cart_details'] = cart_details_list
+                self.context['cart_count'] = cart_details.count()
             response = render(request, 'cart.html', self.context)
             return response
         except:

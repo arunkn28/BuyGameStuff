@@ -76,7 +76,7 @@ class Product(models.Model):
     efficient way of doing that
     """
     sku                 = models.CharField(max_length=50,default=None)
-    name                = models.CharField(max_length=120,default=None)
+    name                = models.CharField(max_length=200,default=None)
     description         = models.TextField(default=None)
     image               = models.ImageField(default=None,blank=True)
     featured            = models.BooleanField(default=False)
