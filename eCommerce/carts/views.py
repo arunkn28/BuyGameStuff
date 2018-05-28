@@ -69,10 +69,10 @@ class UpdateCart(CartsBaseView):
                     cart_detail_obj = self.cart_det_obj.get_cart_details(cart.id,product_id)
                     if cart_detail_obj:
                         if quantity:
-                            cart_detail_obj.update(quantity=quantity) #If in cartdetails already exists for given cattid
-                            cart_detail_obj.first().save() #have to call save because "update" doesnt emit the signal to update the cart amount
+                            cart_detail_obj.first().quantity = quantity
+                            cart_detail_obj.first().save()
                         else:
-                            cart_detail_obj.update(quantity=cart_detail_obj.first().quantity+1)
+                            cart_detail_obj.first().quantity = cart_detail_obj.first().quantity+1
                             cart_detail_obj.first().save()
                     else:                                         #and product id update the quantity only
                         self.cart_det_obj.create_cart_details(cart,product_obj)#Else this the first time product is being added
