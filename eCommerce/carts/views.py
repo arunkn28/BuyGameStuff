@@ -34,9 +34,7 @@ class CartView(CartsBaseView):
                 for cart in cart_details:
                     product = Product.objects.filter(id=cart.product_id)
                     cart_temp_dict = {}
-                    cart_temp_dict['product_name']  = product.first().name
-                    cart_temp_dict['product_image'] = product.first().image
-                    cart_temp_dict['product_url']   = product.first().get_absolute_url()
+                    cart_temp_dict['product']       = product.first()
                     cart_temp_dict['quantity']      = cart.quantity
                     cart_temp_dict['price']         = product.first().price
                     cart_temp_dict[cart.id]         = cart.id
@@ -62,7 +60,6 @@ class UpdateCart(CartsBaseView):
             product_id      = int(request.POST.get('product_id'))
             quantity        = request.POST.get('quantity')
             remove_product  = request.POST.get('remove_product')
-            
             if product_id:
                 if not remove_product: # Adding a product to cart
                     product_obj = Product.objects.get_product_by_id(product_id)
@@ -73,8 +70,10 @@ class UpdateCart(CartsBaseView):
                     if cart_detail_obj:
                         if quantity:
                             cart_detail_obj.update(quantity=quantity) #If in cartdetails already exists for given cattid
+                            cart_detail_obj.first().save() #have to call save because "update" doesnt emit the signal to update the cart amount
                         else:
                             cart_detail_obj.update(quantity=cart_detail_obj.first().quantity+1)
+                            cart_detail_obj.first().save()
                     else:                                         #and product id update the quantity only
                         self.cart_det_obj.create_cart_details(cart,product_obj)#Else this the first time product is being added
                 else: # For removing the product from the cart                    #Create an entry in cart details object

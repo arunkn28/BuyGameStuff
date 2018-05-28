@@ -59,7 +59,6 @@ class ProductManager(models.Manager):
         """Get the prodcuts based on serach"""
         try:
             search = Q(name__icontains=query)|Q(description__icontains=query)
-                   # | Q(slug__iconatins=query)
             result = self.filter(search).distinct()
         except:
             print('500')

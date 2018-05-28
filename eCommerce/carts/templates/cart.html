@@ -38,14 +38,14 @@
                                     {% for cart in cart_details %}
                                         <tr>
                                             <td>
-                                                <a href="{{cart.product_url}}">
-                                                    <img src="{{cart.product_image.url}}" alt="{{cart.product_name}}">
+                                                <a href="{{cart.product.get_absolute_url}}">
+                                                    <img src="{{cart.product.image.url}}" alt="{{cart.product.name}}">
                                                 </a>
                                             </td>
-                                            <td><a href="{{cart.product_url}}">{{cart.product_name}}</a>
+                                            <td><a href="{{cart.product.get_absolute_url}}">{{cart.product.name}}</a>
                                             </td>
                                             <td>
-                                                <input id="cart_quant" type="number" min="0" value="{{cart.quantity}}" class="form-control">
+                                                <input type="number" min="0" value="{{cart.quantity}}" class="form-control cart_quant">
                                             </td>
                                             <td class="td_cart_price">&#8377;{{cart.price}}</td>
                                             <td>&#8377;0.00</td>
@@ -248,7 +248,7 @@
 		var total=0;
 		$('#cart_table tbody tr').each(function(){
 			 var price = parseFloat($(this).find(".td_cart_price").html().replace(/\₹/g, '')).toFixed(2);
-			 var quantity = parseFloat($(this).find('#cart_quant').val()).toFixed(2);
+			 var quantity = parseFloat($(this).find('.cart_quant').val()).toFixed(2);
 			 total += price*quantity;
 			 
 		});
