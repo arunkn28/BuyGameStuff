@@ -36,7 +36,7 @@
                                     </thead>
                                     <tbody>
                                     {% for cart in cart_details %}
-                                        <tr>
+                                        <tr id="{{cart.product.id}}">
                                             <td>
                                                 <a href="{{cart.product.get_absolute_url}}">
                                                     <img src="{{cart.product.image.url}}" alt="{{cart.product.name}}">
@@ -50,7 +50,7 @@
                                             <td class="td_cart_price">&#8377;{{cart.price}}</td>
                                             <td>&#8377;0.00</td>
                                             <td>&#8377;{{cart.price}}</td>
-                                            <td><a href="#"><i class="fa fa-trash-o"></i></a>
+                                            <td><a class="trash_btn" data-value="{{cart.product.id}}"><i class="fa fa-trash-o"></i></a>
                                             </td>
                                         </tr>
                                         {% endfor %}
@@ -245,6 +245,32 @@
 {% block javascriptblock %}
 	<script>
 	$(document).ready(function(){
+		calculate_total();
+	});
+	
+	$('.trash_btn').on('click',function(){
+		 data={};
+		 var product_id = $(this).data("value");
+		data['remove_product'] =true;
+		data['product_id'] = product_id;
+		$.ajax({
+		    url: "{% url 'cart:updatecart' %}",
+		    type: "POST",
+		    cache:false,
+		    data: data,
+		    dataType: "json",
+		    success: function(resp){
+		       $('#'+product_id).remove();
+		       calculate_total();
+		    },
+		    error: function(HttpRequest, textStatus, errorThrown) { 
+		        //alert("Status: " + textStatus); alert("Error: " + errorThrown); 
+		    }       
+		}); 
+		
+	});
+	
+	function calculate_total(){
 		var total=0;
 		$('#cart_table tbody tr').each(function(){
 			 var price = parseFloat($(this).find(".td_cart_price").html().replace(/\₹/g, '')).toFixed(2);
@@ -254,6 +280,6 @@
 		});
 		
 		$('.cart_total').html('&#8377;'+parseFloat(total).toFixed(2));
-	});
+	}
 	</script>
 {% endblock javascriptblock%}

@@ -30,6 +30,7 @@ class CartManager(models.Manager):
             if request.user.is_authenticated() and not cart_obj.user:
                 cart_obj.user = request.user
                 cart_obj.save()
+                request.session['cart_id'] = cart_obj.id
         else:        
             cart_obj = self.create_cart_obj(request.user)
             request.session['cart_id'] = cart_obj.id

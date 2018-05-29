@@ -27,7 +27,7 @@ class CartView(CartsBaseView):
                 cart = self.cart_obj.get_cart_by_user(request.user)
             else:
                 cart = self.cart_obj.get_cart_by_id(request.session.get('cart_id',None)) 
-            
+            request.session['cart_id'] = cart.first().id
             cart_details_list =[]
             if cart:
                 cart_details = self.cart_det_obj.get_cart_items(cart.first().id) 
@@ -51,7 +51,10 @@ class CartView(CartsBaseView):
             print("500")
             raise Exception    
             
-
+    def post(self,request):
+        pass
+    
+    
 class UpdateCart(CartsBaseView):
     """
     This the view which will get called on every addition or removal of
@@ -79,11 +82,12 @@ class UpdateCart(CartsBaseView):
                             cart_detail_obj.first().save()
                     else:                                         #and product id update the quantity only
                         self.cart_det_obj.create_cart_details(cart,product_obj)#Else this the first time product is being added
+                    return redirect("/")
                 else: # For removing the product from the cart                    #Create an entry in cart details object
                     cart_detail_obj = self.cart_det_obj.get_cart_details(request.session.get('cart_id'),product_id)
                     cart_detail_obj.delete()       
                 request.session['cart_count'] = self.cart_det_obj.get_cart_count(request.session.get('cart_id'))
-                return redirect("/")
+                return HttpResponse("true")
         except Product.DoesNotExist:
             pass
         except Exception as e:

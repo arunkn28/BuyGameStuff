@@ -27,8 +27,10 @@ class LoginView(AccountBaseClass):
         
     def post(self,request):
         
-        """Authenticate and log in a user and redirect him to the home page.
-        If not authenticated reload the pgae with error in the context dict"""
+        """
+        Authenticate and log in a user and redirect him to the home page.
+        If not authenticated reload the pgae with error in the context dict
+        """
     
         try:
             username     = request.POST['email']
@@ -75,7 +77,7 @@ class RegisterView(AccountBaseClass):
                 Login him and redirect to the login Page. Send account Activation Mailer??
                 """
                 login(request, user)
-                self.account_obj.create_account(user.id ,first_name, last_name, email)
+                self.account_obj.create_account(user ,first_name, last_name, email)
                 return redirect('/')
         except db.IntegrityError:
             return render(request,'login.html',{'user_exists':True})
