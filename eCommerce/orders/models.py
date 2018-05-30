@@ -18,7 +18,7 @@ class Order(models.Model):
     
     """
     orderid             = models.CharField(max_length=100,blank=True)
-    status              = models.CharField(default='created',choices = ORDER_STATUS)
+    status              = models.CharField(default='created', choices = ORDER_STATUS, max_length=10)
     user                = models.ForeignKey(User)
     cart                = models.ForeignKey(Cart)
     subtotal            = models.DecimalField(max_digits=7,decimal_places=2,default=0.00)
@@ -45,7 +45,7 @@ class OrderHistory(models.Model):
     Whenver a order changes status that will be added/updated to this table
     """
     orderid             = models.CharField(max_length=100,blank=True)
-    status              = models.CharField(default='created',choices = ORDER_STATUS)
+    status              = models.CharField(default='created', choices = ORDER_STATUS, max_length=10)
     user                = models.ForeignKey(User)
     cart                = models.ForeignKey(Cart)
     subtotal            = models.DecimalField(max_digits=7,decimal_places=2,default=0.00)

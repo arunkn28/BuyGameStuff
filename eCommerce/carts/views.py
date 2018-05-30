@@ -1,6 +1,7 @@
 import json
 
 from django.shortcuts import render, redirect
+from django.core.urlresolvers import reverse
 from django.views import View
 
 from .models import Cart, CartDetails
@@ -52,7 +53,7 @@ class CartView(CartsBaseView):
             raise Exception    
             
     def post(self,request):
-        pass
+        return redirect(reverse('order:orderview'))
     
     
 class UpdateCart(CartsBaseView):
@@ -85,9 +86,9 @@ class UpdateCart(CartsBaseView):
                     return redirect("/")
                 else: # For removing the product from the cart                    #Create an entry in cart details object
                     cart_detail_obj = self.cart_det_obj.get_cart_details(request.session.get('cart_id'),product_id)
-                    cart_detail_obj.delete()       
-                request.session['cart_count'] = self.cart_det_obj.get_cart_count(request.session.get('cart_id'))
-                return HttpResponse("true")
+                    cart_detail_obj.delete()
+                    cart_count =  self.cart_det_obj.get_cart_count(request.session.get('cart_id')) 
+                    return HttpResponse(json.dumps({'cart_count': cart_count}), content_type="application/json")     
         except Product.DoesNotExist:
             pass
         except Exception as e:
