@@ -14,7 +14,7 @@ class AccountManager(models.Manager):
         return self.filter(id=id)
     
     def get_account_by_user(self,user_id):
-        return self.filter(user=user_id)
+        return self.filter(user_id=user_id)
     
 class Account(models.Model):
     user                  = models.OneToOneField(User)
@@ -38,9 +38,10 @@ class AccountAddressManager(models.Manager):
     def seacrh_address_by_account(self,account_id):
         return self.filter(account_id=account_id)
     
-    def update_address(self,user_id,address_details):
-        account         = Account().get_account_by_user(user_id)
-        account_address = self.seacrh_address_by_account(account.first().account_id)
+    def update_address(self,username,address_details):
+        user            = User.objects.filter(username=username)
+        account         = Account.objects.get_account_by_user(user.first().id)
+        account_address = self.seacrh_address_by_account(account.first().id)
         if account_address:
             self.update(first_name=address_details.get('first_name'),last_name=address_details.get('last_name'),
                         phone_number=address_details.get('phone_number'),

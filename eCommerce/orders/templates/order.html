@@ -19,7 +19,6 @@
 					<div class="col-md-9" id="checkout">
 
                     <div class="box">
-                        <form method="post" action="{% url 'address:updateaddress'%}" id="checkout_address_form">
                             <h1>Checkout</h1>
                             <ul class="nav nav-pills nav-justified">
                                 <li class="active"><a><i class="fa fa-map-marker"></i><br>Address</a>
@@ -112,11 +111,10 @@
                                     <a href="basket.html" class="btn btn-default"><i class="fa fa-chevron-left"></i>Back to Cart</a>
                                 </div>
                                 <div class="pull-right">
-                                    <button type="submit" class="btn btn-primary" id="order_preview_btn">Continue to Order Preview<i class="fa fa-chevron-right"></i>
+                                    <button class="btn btn-primary" id="order_preview_btn">Continue to Order Preview<i class="fa fa-chevron-right"></i>
                                     </button>
                                 </div>
                             </div>
-                        </form>
                     </div>
                     <!-- /.box -->
 
@@ -257,15 +255,23 @@
  <script>
 	
 		//Ajax call to update the address for this order
-		$('#checkout_address_form').submit(function(e){
-			e.preventDefault();
-			
+		$('#order_preview_btn').on('click',function(){
+			data = {};
+			data['first_name']		=$('#first_name').val();
+			data['last_name']		=$('#last_name').val();
+			data['phone_number']	=$('#phone_number').val();
+			data['building_info']	=$('#building_info').val();
+			data['area']			=$('#area').val();
+			data['city']			=$('#city').val();
+			data['pincode']			=$('#pincode').val();
+			data['state']			=$('#state').val();
+			data['address_type']	=$('#address_type').val();
 			$.ajax({
-				url:"{% url 'address:updateaddress'%}",
+				url:"{% url 'account:updateaddress' %}",
 				type: "POST",
 			    cache:false,
+			    data: data,
 			    dataType: "json",
-			    data: $(this).serialize()
 			    success: function(resp){
 			        $('#address_div').hide();
 					$('#order_review_div').show();

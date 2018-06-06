@@ -96,8 +96,8 @@ class UpdateAddress(AccountBaseClass):
     def post(self,request):
         try:
             address_obj     = AccountAddress.objects
-            address_details = request.body
-            address_obj.update(request.user,address_details)
+            address_details = request.POST
+            address_obj.update_address(request.user,address_details)
             response = {'response':True} 
         except:
             response = {'response':False}

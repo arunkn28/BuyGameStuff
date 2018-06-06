@@ -16,7 +16,7 @@ class OrderView(OrderViewBase):
     
     def get(self,request):
         cart            =   self.cart_obj.get_cart_by_user(request.user)
-        cart_details    =   self.cart_det_obj.get_cart_items(cart.first().cart_id)
+        cart_details    =   self.cart_det_obj.get_cart_items(cart.first().id)
         self.context_dict['cart']           = cart.first()
         self.context_dict['cart_details']   = cart_details
         return render(request, 'order.html', self.context_dict)
