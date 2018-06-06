@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 
 from eCommerce.carts.models import Cart
 from eCommerce.utils import generate_order_id
+from eCommerce.products.models import Product
 # Create your models here.
 from .utils import ORDER_STATUS
 
@@ -29,6 +30,24 @@ class Order(models.Model):
     modified_datetime   = models.DateField(auto_now=True)
     
     objects             = OrderManager()
+
+
+class OrderDetailsManager(models.Model):
+    pass
+
+
+class OrderDetails(models.Model):
+    order               = models.ForeignKey(Cart)
+    product             = models.ForeignKey(Product)
+    price               = models.DecimalField(max_digits=7,decimal_places=2,default=0.00)
+    quantity            = models.IntegerField(default=1)
+    created_datetime    = models.DateField(auto_now_add=True)
+    modified_datetime   = models.DateField(auto_now=True)
+    
+    objects             = OrderDetailsManager()
+    
+    def __str__(self):
+        return str(self.order_id)
 
 def pre_save_order_id(sender,instance,*args,**kwargs):
     if not instance.orderid:
