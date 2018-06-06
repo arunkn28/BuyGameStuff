@@ -1,19 +1,21 @@
+import json
+
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django import db
 from django.views import View
-from django.shortcuts import render, redirect
-
+from django.shortcuts import render, redirect, HttpResponse
 from django.utils.http import is_safe_url
 
 from eCommerce.carts.backend.backend import CartBackend
 
-from .models import Account
+from .models import Account, AccountAddress
 
 class AccountBaseClass(View):
     def __init__(self):
         self.account_obj = Account.objects
 
+        
 class LoginView(AccountBaseClass):
     
     """Login page View"""
@@ -83,4 +85,21 @@ class RegisterView(AccountBaseClass):
             return render(request,'login.html',{'user_exists':True})
         except Exception as ex:
             print("500::"+ex.message)   
+            
+
+class UpdateAddress(AccountBaseClass):
+    
+    """
+        View to update the address for an account
+    """
+    
+    def post(self,request):
+        try:
+            address_obj     = AccountAddress.objects
+            address_details = request.body
+            address_obj.update(request.user,address_details)
+            response = {'response':True} 
+        except:
+            response = {'response':False}
+        return HttpResponse(json.dumps(response), content_type="application/json")
             

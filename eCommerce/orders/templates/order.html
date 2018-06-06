@@ -19,12 +19,12 @@
 					<div class="col-md-9" id="checkout">
 
                     <div class="box">
-                        <form method="post" action="" id="checkout_address_form">
+                        <form method="post" action="{% url 'address:updateaddress'%}" id="checkout_address_form">
                             <h1>Checkout</h1>
                             <ul class="nav nav-pills nav-justified">
-                                <li class="active"><a href="#"><i class="fa fa-map-marker"></i><br>Address</a>
+                                <li class="active"><a><i class="fa fa-map-marker"></i><br>Address</a>
                                 </li>
-                                <li class="disabled"><a href="#"><i class="fa fa-eye"></i><br>Order Review</a>
+                                <li class="disabled"><a><i class="fa fa-eye"></i><br>Order Review</a>
                                 </li>
                             </ul>
 
@@ -32,14 +32,14 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="firstname">Firstname</label>
-                                            <input type="text" class="form-control" id="firstname">
+                                            <label for="first_name">Firstname</label>
+                                            <input type="text" class="form-control" id="first_name" name="first_name">
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="lastname">Lastname</label>
-                                            <input type="text" class="form-control" id="lastname">
+                                            <label for="last_name">Lastname</label>
+                                            <input type="text" class="form-control" id="last_name" name="last_name">
                                         </div>
                                     </div>
                                 </div>
@@ -48,55 +48,58 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="company">Company</label>
-                                            <input type="text" class="form-control" id="company">
+                                            <label for="phone">Phone</label>
+                                            <input type="text" class="form-control" id="phone_number" name="phone_number">
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="street">Street</label>
-                                            <input type="text" class="form-control" id="street">
+                                            <label for="building_info">Building Info</label>
+                                            <input type="text" class="form-control" id="building_info" name="building_info">
                                         </div>
                                     </div>
                                 </div>
                                 <!-- /.row -->
 
                                 <div class="row">
-                                    <div class="col-sm-6 col-md-3">
+                                	<div class="col-sm-6 col-md-3">
                                         <div class="form-group">
-                                            <label for="city">Company</label>
-                                            <input type="text" class="form-control" id="city">
+                                            <label for="area">Area</label>
+                                            <input type="text" class="form-control" id="area" name="area">
                                         </div>
                                     </div>
                                     <div class="col-sm-6 col-md-3">
                                         <div class="form-group">
-                                            <label for="zip">ZIP</label>
-                                            <input type="text" class="form-control" id="zip">
+                                            <label for="city">City</label>
+                                            <input type="text" class="form-control" id="city" name="city">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <div class="form-group">
+                                            <label for="pincode">Pincode</label>
+                                            <input type="text" class="form-control" id="pincode" name="pincode">
                                         </div>
                                     </div>
                                     <div class="col-sm-6 col-md-3">
                                         <div class="form-group">
                                             <label for="state">State</label>
-                                            <select class="form-control" id="state"></select>
+                                            <select class="form-control" id="state" name="state"></select>
                                         </div>
                                     </div>
-                                    <div class="col-sm-6 col-md-3">
+                                    <!-- <div class="col-sm-6 col-md-3">
                                         <div class="form-group">
                                             <label for="country">Country</label>
                                             <select class="form-control" id="country"></select>
                                         </div>
-                                    </div>
+                                    </div> -->
 
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="phone">Telephone</label>
-                                            <input type="text" class="form-control" id="phone">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label for="email">Email</label>
-                                            <input type="text" class="form-control" id="order_email">
+                                            <label for="address_type">Address Type</label>
+                                            <select class="form-control" id="address_type" name="address_type">
+													<option value="home" value="home">HOME</option>
+													<option value="office" value="home">OFFICE</option>                                            
+                                            </select>
                                         </div>
                                     </div>
 
@@ -121,6 +124,7 @@
                 	</div>
                 </div>
 				 <!-- Address End--> 
+			<!-- Order Preview Start -->
 			<div id="order_review_div" style="display:none">		
                 <div class="col-md-9" id="checkout">
 
@@ -204,6 +208,7 @@
                 </div>
                 <!-- /.col-md-9 -->
 			</div>
+			<!-- Order Preview End -->
                 <div class="col-md-3">
 
                     <div class="box" id="order-summary">
@@ -251,15 +256,25 @@
  {% block javascriptblock%}
  <script>
 	
-	$('#order_preview_btn').on('click',function(){
 		//Ajax call to update the address for this order
 		$('#checkout_address_form').submit(function(e){
 			e.preventDefault();
+			
+			$.ajax({
+				url:"{% url 'address:updateaddress'%}",
+				type: "POST",
+			    cache:false,
+			    dataType: "json",
+			    data: $(this).serialize()
+			    success: function(resp){
+			        $('#address_div').hide();
+					$('#order_review_div').show();
+			    },
+			    error: function(HttpRequest, textStatus, errorThrown) { 
+			        //alert("Status: " + textStatus); alert("Error: " + errorThrown); 
+			    }
+			});
 		});
-		$('#address_div').hide();
-		$('#order_review_div').show();
-		
-	});
 	
 	$('#back_address_btn').on('click',function(){
 		$('#address_div').show();

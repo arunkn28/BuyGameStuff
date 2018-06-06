@@ -34,7 +34,26 @@ class Account(models.Model):
 
 
 class AccountAddressManager(models.Manager):
-    pass
+    
+    def seacrh_address_by_account(self,account_id):
+        return self.filter(account_id=account_id)
+    
+    def update_address(self,user_id,address_details):
+        account         = Account().get_account_by_user(user_id)
+        account_address = self.seacrh_address_by_account(account.first().account_id)
+        if account_address:
+            self.update(first_name=address_details.get('first_name'),last_name=address_details.get('last_name'),
+                        phone_number=address_details.get('phone_number'),
+                        building_info=address_details.get('building_info'),area=address_details.get('area'),
+                        city=address_details.get('city'),pincode=address_details.get('pincode'),
+                        state=address_details.get('state'),address_type=address_details.get('address_type'))
+        else:
+            self.create(account=account.first(),first_name=address_details.get('first_name'),last_name=address_details.get('last_name'),
+                        phone_number=address_details.get('phone_number'),
+                        building_info=address_details.get('building_info'),area=address_details.get('area'),
+                        city=address_details.get('city'),pincode=address_details.get('pincode'),
+                        state=address_details.get('state'),address_type=address_details.get('address_type'))
+            
 
 class AccountAddress(models.Model):
     """
@@ -42,7 +61,8 @@ class AccountAddress(models.Model):
     Whenever customer chnages the address we update with the new one
     """
     account               = models.OneToOneField(Account)
-    name                  = models.CharField(max_length=150)
+    first_name            = models.CharField(max_length=50)
+    last_name             = models.CharField(max_length=50)
     phone_regex           = RegexValidator(regex=r'^\+91[7-9]\d{9}$')
     phone_number          = models.CharField(validators=[phone_regex], max_length=17, null=True) 
     building_info         = models.CharField(max_length=500,default='')
