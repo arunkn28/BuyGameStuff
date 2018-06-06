@@ -8,8 +8,8 @@ class OrderViewBase(View):
 class OrderView(OrderViewBase):
     
     def get(self,request):
-        pass
-    
+        return render(request, 'order.html', {})
+        
     def post(self,request):
         pass
     
