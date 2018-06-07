@@ -17,7 +17,7 @@
 				<!-- Address Start -->
 				<div id='address_div'>
 					<div class="col-md-9" id="checkout">
-
+				<form id="checkout_address_form">
                     <div class="box">
                             <h1>Checkout</h1>
                             <ul class="nav nav-pills nav-justified">
@@ -111,13 +111,13 @@
                                     <a href="basket.html" class="btn btn-default"><i class="fa fa-chevron-left"></i>Back to Cart</a>
                                 </div>
                                 <div class="pull-right">
-                                    <button class="btn btn-primary" id="order_preview_btn">Continue to Order Preview<i class="fa fa-chevron-right"></i>
+                                    <button type="submit" class="btn btn-primary" id="order_preview_btn">Continue to Order Preview<i class="fa fa-chevron-right"></i>
                                     </button>
                                 </div>
                             </div>
                     </div>
                     <!-- /.box -->
-
+				</form>
 
                 	</div>
                 </div>
@@ -253,7 +253,47 @@
  
  {% block javascriptblock%}
  <script>
-	
+		
+ 		$('#checkout_address_form').validate({
+ 			rules:{
+ 				first_name		:	"required",
+ 				last_name		:	"required",
+ 				phone_number	:	{
+ 									 required:true,
+ 									 phone_number:true
+ 									},
+ 				building_info	:	"required",
+ 				area			:	"required",
+ 				city			:	"required",
+ 				pincode			:	{
+ 									 required:true,
+ 									 pincode:true
+ 									},
+ 				state			:	"required",
+ 				address_type	:	"required"
+ 			},
+ 			messages:{
+ 				first_name		: 	"Please enter a valid first name",
+ 				last_name		: 	"Please enter a valid last name",
+ 				phone_number	:	"Please enter a valid phone number",
+ 				building_info	:	"Please enter valid building information",
+ 				area			: 	"Please enter valid area",
+ 				city			:	"Please enter a valid city",
+ 				state			:	"Please select a state",
+ 				address_type	: 	"Please select an address type"
+ 			}
+ 		});
+ 		
+ 		$.validator.addMethod('phone_number',function(value,element){
+ 			var phone_number = new RegExp('^[7-9]d{9}$');
+ 			return phone_number.test(value);
+ 		});
+ 		
+ 		$.validator.addMethod('pincode',function(value,element){
+ 			var pincode = new RegExp('^[1-9][0-9]{5}$');
+ 			return pincode.test(value);
+ 		});
+ 		
 		//Ajax call to update the address for this order
 		$('#order_preview_btn').on('click',function(){
 			data = {};
