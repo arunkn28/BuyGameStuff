@@ -48,7 +48,7 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label for="phone">Phone</label>
-                                            <input type="text" class="form-control" id="phone_number" name="phone_number">
+                                            <input type="text" class="form-control" id="phone_number" maxlength="10" name="phone_number">
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
@@ -255,6 +255,7 @@
  <script>
 		
  		$('#checkout_address_form').validate({
+ 			errorClass			: "error-class",
  			rules:{
  				first_name		:	"required",
  				last_name		:	"required",
@@ -275,17 +276,24 @@
  			messages:{
  				first_name		: 	"Please enter a valid first name",
  				last_name		: 	"Please enter a valid last name",
- 				phone_number	:	"Please enter a valid phone number",
+ 				phone_number	:	{
+ 									 phone_number:"Please enter a valid phone number",
+ 									 required:"Please enter a phone number"
+ 									 },
  				building_info	:	"Please enter valid building information",
  				area			: 	"Please enter valid area",
  				city			:	"Please enter a valid city",
+ 				pincode			:	{
+ 									 required: "Please enter a pincode",
+ 									 pincode: "Please enter a valid pincode"
+ 									},
  				state			:	"Please select a state",
  				address_type	: 	"Please select an address type"
  			}
  		});
  		
  		$.validator.addMethod('phone_number',function(value,element){
- 			var phone_number = new RegExp('^[7-9]d{9}$');
+ 			var phone_number = new RegExp('^[7-9][0-9]{9}$');
  			return phone_number.test(value);
  		});
  		

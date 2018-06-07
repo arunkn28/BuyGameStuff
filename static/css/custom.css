@@ -3,3 +3,7 @@
 .home-product{
 	height: 200px !important;
 }
+
+.error-class {
+    color:#FF0000;  /* red */
+}
