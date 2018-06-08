@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views import View
-
+from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from ..carts.models import Cart, CartDetails
 from .models import Order, OrderDetails
@@ -42,15 +42,16 @@ class OrderView(OrderViewBase):
         try:
             cart            =   self.cart_obj.get_cart_by_user(request.user)
             cart_details    =   self.cart_det_obj.get_cart_items(cart.first().id)
-            order           =   self.order_obj.get_order_or_create_by_cart(cart_id=cart.first().id,user_id=request.user)
+            order, created  =   self.order_obj.get_order_or_create_by_cart(cart.first().id,request.user,'created')
             for item in cart_details:
-                order_det   =   self.order_det_obj.get_cart_det_or_create(order.first().id,item.product.id)
-                order_det.first().price = item.price
-                order_det.first().quantity = item.quantity
-                order_det.first().save()
+                order_det,created           = self.order_det_obj.get_order_det_or_create(order.id,item.product.id)
+                order_det.price             = item.price
+                order_det.quantity          = item.quantity
+                order_det.save()
             """
                 Code for instamojo payment
             """
+            return HttpResponseRedirect("/")
         except Exception as e:
             raise e
                 

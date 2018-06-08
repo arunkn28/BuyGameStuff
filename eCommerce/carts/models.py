@@ -70,8 +70,6 @@ class CartDetailsManager(models.Manager):
     def get_cart_items(self,cart_id):
         return self.get_queryset().filter(cart_id=cart_id)
     
-    def get_cart_det_or_create(self,order_id,product_id):
-        return self.get_or_create(order_id=order_id,product_id=product_id)
     
 class CartDetails(models.Model):
     cart                = models.ForeignKey(Cart)
@@ -101,7 +99,7 @@ def post_save_cart_details_receiver(sender,instance,*args,**kwargs):
         total = 0
         for cart in cart_details_obj:
             total = fsum([total,cart.price*cart.quantity])
-            cart_details_obj.update(total=total)
+            CartDetails.objects.filter(cart_id=instance.cart_id,product_id=cart.product_id).update(total=cart.price*cart.quantity)
         Cart.objects.filter(pk=instance.cart_id).update(subtotal=total,total=total)
             
 post_save.connect(post_save_cart_details_receiver, sender=CartDetails)   

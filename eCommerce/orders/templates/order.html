@@ -17,7 +17,7 @@
 				<!-- Address Start -->
 				<div id='address_div'>
 					<div class="col-md-9" id="checkout">
-				<form id="checkout_address_form">
+				<form id="checkout_address_form" method="post" action="">{% csrf_token %}
                     <div class="box">
                             <h1>Checkout</h1>
                             <ul class="nav nav-pills nav-justified">
@@ -131,7 +131,7 @@
                 <div class="col-md-9" id="checkout">
 
                     <div class="box">
-                        <form method="post" id="place_order_form">
+                        <form method="post" id="place_order_form" action="">{% csrf_token%}
                             <h1>Checkout - Order review</h1>
                             <ul class="nav nav-pills nav-justified">
                                 <li><a href="checkout1.html"><i class="fa fa-map-marker"></i><br>Address</a>
@@ -295,7 +295,8 @@
  		});
  		
 		//Ajax call to update the address for this order
-		$('#order_preview_btn').on('click',function(){
+		$('#checkout_address_form').submit(function(e){
+			e.preventDefault();
 			data = {};
 			data['first_name']		=$('#first_name').val();
 			data['last_name']		=$('#last_name').val();

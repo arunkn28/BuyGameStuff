@@ -12,8 +12,9 @@ from .utils import ORDER_STATUS
 
 class OrderManager(models.Manager):
     
-    def get_order_or_create_by_cart(self,cart_id):
-        return self.get_or_create(cart_id=cart_id)
+    def get_order_or_create_by_cart(self,cart_id,user,status):
+        user = User.objects.filter(username=user)
+        return self.get_or_create(cart_id=cart_id,user_id=user.first().id,status=status)
 
 
 class Order(models.Model):
@@ -34,14 +35,17 @@ class Order(models.Model):
     modified_datetime   = models.DateField(auto_now=True)
     
     objects             = OrderManager()
+    
+    def __str__(self):
+        return str(self.orderid)
 
-
-class OrderDetailsManager(models.Model):
-    pass
+class OrderDetailsManager(models.Manager):
+    def get_order_det_or_create(self,order_id,product_id):
+        return self.get_or_create(order_id=order_id,product_id=product_id)
 
 
 class OrderDetails(models.Model):
-    order               = models.ForeignKey(Cart)
+    order               = models.ForeignKey(Order)
     product             = models.ForeignKey(Product)
     price               = models.DecimalField(max_digits=7,decimal_places=2,default=0.00)
     quantity            = models.IntegerField(default=1)
@@ -52,7 +56,7 @@ class OrderDetails(models.Model):
     objects             = OrderDetailsManager()
     
     def __str__(self):
-        return str(self.order_id)
+        return str(self.order.orderid)
 
 def pre_save_order_id(sender,instance,*args,**kwargs):
     if not instance.orderid:
@@ -61,10 +65,13 @@ def pre_save_order_id(sender,instance,*args,**kwargs):
 pre_save.connect(pre_save_order_id, sender=Order)    
 
 def post_save_order_details(sender,instance,*args,**kwargs):
-    if instance.orderid:
-        total=0
-        total = fsum([total,instance.price*instance.quantity])
-        instance.update(total=total)
+    order_details_obj = OrderDetails.objects.filter(order_id=instance.order_id)
+    if order_details_obj:
+        total = 0
+        for order in order_details_obj:
+            total = fsum([total,order.price*order.quantity])
+            OrderDetails.objects.filter(order_id=instance.order_id,product_id=order.product_id).update(total=order.price*order.quantity)
+        Order.objects.filter(pk=instance.order_id).update(subtotal=total,total=total)
     
 post_save.connect(post_save_order_details, sender=OrderDetails)    
 
