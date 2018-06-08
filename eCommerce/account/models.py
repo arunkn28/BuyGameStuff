@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 
-from .utils import ADDRESS_TYPE
+from .utils import ADDRESS_TYPE, STATE_MAPPING
 
 
 class AccountManager(models.Manager):
@@ -70,8 +70,9 @@ class AccountAddress(models.Model):
     area                  = models.CharField(max_length=500,default='')
     city                  = models.CharField(max_length=50,default='')
     pincode               = models.PositiveIntegerField()
-    state                 = models.CharField(max_length=100,default='')
+    state                 = models.CharField(max_length=100,choices=STATE_MAPPING)
     address_type          = models.CharField(max_length=25,default='home',choices = ADDRESS_TYPE)
     objects               = AccountAddressManager()
+    
     def __str__(self):
         return str(self.account.id)

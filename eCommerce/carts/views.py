@@ -3,10 +3,11 @@ import json
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from django.views import View
+from django.http.response import HttpResponse
 
 from .models import Cart, CartDetails
-from eCommerce.products.models import Product
-from django.http.response import HttpResponse
+from ..products.models import Product
+
 # Create your views here.
 class CartsBaseView(View):
         

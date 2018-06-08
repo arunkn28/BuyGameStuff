@@ -1,15 +1,19 @@
+from math import fsum
+
 from django.db import models
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, post_save
 from django.contrib.auth.models import User
 
-from eCommerce.carts.models import Cart
-from eCommerce.utils import generate_order_id
-from eCommerce.products.models import Product
+from ..carts.models import Cart
+from ..utils import generate_order_id
+from ..products.models import Product
 # Create your models here.
 from .utils import ORDER_STATUS
 
 class OrderManager(models.Manager):
-    pass
+    
+    def get_order_or_create_by_cart(self,cart_id):
+        return self.get_or_create(cart_id=cart_id)
 
 
 class Order(models.Model):
@@ -24,9 +28,9 @@ class Order(models.Model):
     cart                = models.ForeignKey(Cart)
     subtotal            = models.DecimalField(max_digits=7,decimal_places=2,default=0.00)
     total               = models.DecimalField(max_digits=7,decimal_places=2,default=0.00)
-    created_by          = models.CharField(max_length=50)
+    created_by          = models.CharField(max_length=50,default='AK')
     created_datetime    = models.DateField(auto_now_add=True)
-    modified_by         = models.DateField(max_length=50)
+    #modified_by         = models.DateField(max_length=50,null=True)
     modified_datetime   = models.DateField(auto_now=True)
     
     objects             = OrderManager()
@@ -41,6 +45,7 @@ class OrderDetails(models.Model):
     product             = models.ForeignKey(Product)
     price               = models.DecimalField(max_digits=7,decimal_places=2,default=0.00)
     quantity            = models.IntegerField(default=1)
+    total               = models.DecimalField(max_digits=7,decimal_places=2,default=0.00)
     created_datetime    = models.DateField(auto_now_add=True)
     modified_datetime   = models.DateField(auto_now=True)
     
@@ -54,6 +59,14 @@ def pre_save_order_id(sender,instance,*args,**kwargs):
         instance.orderid = generate_order_id(instance)    
     
 pre_save.connect(pre_save_order_id, sender=Order)    
+
+def post_save_order_details(sender,instance,*args,**kwargs):
+    if instance.orderid:
+        total=0
+        total = fsum([total,instance.price*instance.quantity])
+        instance.update(total=total)
+    
+post_save.connect(post_save_order_details, sender=OrderDetails)    
 
 
 class OrderHistoryManager(models.Manager):
@@ -71,7 +84,7 @@ class OrderHistory(models.Model):
     total               = models.DecimalField(max_digits=7,decimal_places=2,default=0.00)
     created_by          = models.CharField(max_length=50)
     created_datetime    = models.DateField(auto_now_add=True)
-    modified_by         = models.DateField(max_length=50)
+    #modified_by         = models.DateField(max_length=50)
     modified_datetime   = models.DateField(auto_now=True)
     
     objects             = OrderHistoryManager()

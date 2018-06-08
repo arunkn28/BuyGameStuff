@@ -7,7 +7,7 @@ from django.views import View
 from django.shortcuts import render, redirect, HttpResponse
 from django.utils.http import is_safe_url
 
-from eCommerce.carts.backend.backend import CartBackend
+from ..carts.backend.backend import CartBackend
 
 from .models import Account, AccountAddress
 

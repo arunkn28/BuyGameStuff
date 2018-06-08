@@ -20,7 +20,7 @@
 						{% endif %}	
                         <hr>
 
-                        <form action="{% url 'account:register' %}" method="post">{% csrf_token %}
+                        <form action="{% url 'account:register' %}" method="post" id="register_form">{% csrf_token %}
                             <div class="form-group">
                                 <label for="name">First Name</label>
                                 <input type="text" class="form-control" id="first_name" name="first_name">
@@ -31,11 +31,15 @@
                             </div>
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="text" class="form-control" id="email_id" name="email_id">
+                                <input type="email" class="form-control" id="email_id" name="email_id">
                             </div>
                             <div class="form-group">
                                 <label for="password">Password</label>
                                 <input type="password" class="form-control" id="password" name="password">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Confirm Password</label>
+                                <input type="password" class="form-control" id="confirm_password" name="confirm_password">
                             </div>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary"><i class="fa fa-user-md"></i> Register</button>
@@ -56,7 +60,7 @@
 							{% endif %}			
                         <hr>
 
-                        <form action="{% url 'account:login' %}" method="post">{% csrf_token %}
+                        <form action="{% url 'account:login' %}" method="post" id="login_form">{% csrf_token %}
                             <div class="form-group">
                                 <label for="email">Email</label>
                                 <input type="text" class="form-control" id="email" name="email">
@@ -84,5 +88,29 @@
 {% endblock content%}
 
 {% block jqueryblock%}
-
+	<script>
+		$('#register_form').validate({
+			errorClass			:	"error-class",
+			rules:{
+				first_name		:	"required",
+ 				last_name		:	"required",
+ 				email_id		:	"required",
+ 				password		:{
+ 									required:true,
+ 									password:true
+ 								 },
+ 				confirm_password: "#password"
+			},
+			messages:{
+				first_name		: 	"Please enter a valid first name",
+ 				last_name		: 	"Please enter a valid last name",
+ 				email_id		:	"Please enter a valid email id",
+ 				password		:{
+ 									required: "Please enter a password",
+ 									password: "Please enter a valid password"
+ 								 },
+ 				confirm_password:	"Passwords does not match"
+			}
+		});
+	</script>
 {% endblock jqueryblock%}

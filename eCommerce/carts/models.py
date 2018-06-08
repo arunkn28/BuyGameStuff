@@ -70,12 +70,15 @@ class CartDetailsManager(models.Manager):
     def get_cart_items(self,cart_id):
         return self.get_queryset().filter(cart_id=cart_id)
     
+    def get_cart_det_or_create(self,order_id,product_id):
+        return self.get_or_create(order_id=order_id,product_id=product_id)
     
 class CartDetails(models.Model):
     cart                = models.ForeignKey(Cart)
     product             = models.ForeignKey(Product)
     price               = models.DecimalField(max_digits=7,decimal_places=2,default=0.00)
     quantity            = models.IntegerField(default=1)
+    total               = models.DecimalField(max_digits=7,decimal_places=2,default=0.00)
     created_datetime    = models.DateField(auto_now_add=True)
     modified_datetime   = models.DateField(auto_now=True)
     
@@ -86,7 +89,7 @@ class CartDetails(models.Model):
 
 
 """
-    Signals to update the total and subtotal in the Cart Details
+    Signals to update the total and subtotal in the Cart
 """    
 def post_save_cart_details_receiver(sender,instance,*args,**kwargs):
     """
@@ -98,6 +101,7 @@ def post_save_cart_details_receiver(sender,instance,*args,**kwargs):
         total = 0
         for cart in cart_details_obj:
             total = fsum([total,cart.price*cart.quantity])
+            cart_details_obj.update(total=total)
         Cart.objects.filter(pk=instance.cart_id).update(subtotal=total,total=total)
             
 post_save.connect(post_save_cart_details_receiver, sender=CartDetails)   

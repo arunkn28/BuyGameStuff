@@ -82,7 +82,11 @@
                                     <div class="col-sm-6 col-md-3">
                                         <div class="form-group">
                                             <label for="state">State</label>
-                                            <select class="form-control" id="state" name="state"></select>
+                                            <select class="form-control" id="state" name="state">
+                                            {% for k,v in states%}
+                                            	<option value="{{k}}">{{v}}</option>
+                                            {% endfor %}
+                                            </select>
                                         </div>
                                     </div>
                                     <!-- <div class="col-sm-6 col-md-3">
@@ -96,8 +100,8 @@
                                         <div class="form-group">
                                             <label for="address_type">Address Type</label>
                                             <select class="form-control" id="address_type" name="address_type">
-													<option value="home" value="home">HOME</option>
-													<option value="office" value="home">OFFICE</option>                                            
+													<option value="home">HOME</option>
+													<option value="office">OFFICE</option>                                            
                                             </select>
                                         </div>
                                     </div>
@@ -127,7 +131,7 @@
                 <div class="col-md-9" id="checkout">
 
                     <div class="box">
-                        <form method="post" action="checkout4.html">
+                        <form method="post" id="place_order_form">
                             <h1>Checkout - Order review</h1>
                             <ul class="nav nav-pills nav-justified">
                                 <li><a href="checkout1.html"><i class="fa fa-map-marker"></i><br>Address</a>
@@ -135,7 +139,6 @@
                                 <li class="active"><a href="#"><i class="fa fa-eye"></i><br>Order Review</a>
                                 </li>
                             </ul>
-
                             <div class="content">
                                 <div class="table-responsive">
                                     <table class="table">
@@ -149,37 +152,26 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                        {% for item in cart_details%}
                                             <tr>
                                                 <td>
                                                     <a href="#">
-                                                        <img src="img/detailsquare.jpg" alt="White Blouse Armani">
+                                                        <img src="{{item.product.image.url}}" alt="{{item.product.name}}">
                                                     </a>
                                                 </td>
-                                                <td><a href="#">White Blouse Armani</a>
+                                                <td><a href="{{item.product.get_absolute_url}}">{{item.product.name}}</a>
                                                 </td>
-                                                <td>2</td>
-                                                <td>$123.00</td>
-                                                <td>$0.00</td>
-                                                <td>$246.00</td>
+                                                <td>{{item.quantity}}</td>
+                                                <td>&#8377;{{item.price}}</td>
+                                                <td>&#8377;0.00</td>
+                                                <td>&#8377;{{item.total}}</td>
                                             </tr>
-                                            <tr>
-                                                <td>
-                                                    <a href="#">
-                                                        <img src="img/basketsquare.jpg" alt="Black Blouse Armani">
-                                                    </a>
-                                                </td>
-                                                <td><a href="#">Black Blouse Armani</a>
-                                                </td>
-                                                <td>1</td>
-                                                <td>$200.00</td>
-                                                <td>$0.00</td>
-                                                <td>$200.00</td>
-                                            </tr>
+                                            {% endfor %}
                                         </tbody>
                                         <tfoot>
                                             <tr>
                                                 <th colspan="5">Total</th>
-                                                <th>$446.00</th>
+                                                <th>&#8377;{{cart.total}}</th>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -194,7 +186,7 @@
                                     <a  class="btn btn-default" id="back_address_btn"><i class="fa fa-chevron-left"></i>Back to Address Details</a>
                                 </div>
                                 <div class="pull-right">
-                                    <button type="submit" class="btn btn-primary">Place an order<i class="fa fa-chevron-right"></i>
+                                    <button type="submit" class="btn btn-primary" id="place_order_btn">Place an order<i class="fa fa-chevron-right"></i>
                                     </button>
                                 </div>
                             </div>
@@ -220,19 +212,19 @@
                                 <tbody>
                                     <tr>
                                         <td>Order subtotal</td>
-                                        <th>$446.00</th>
+                                        <th>&#8377;{{cart.subtotal}}</th>
                                     </tr>
                                     <tr>
                                         <td>Shipping and handling</td>
-                                        <th>$10.00</th>
+                                        <th>&#8377;00.00</th>
                                     </tr>
-                                    <tr>
+                                   <!--  <tr>
                                         <td>Tax</td>
-                                        <th>$0.00</th>
-                                    </tr>
+                                        <th>&#8377;0.00</th>
+                                    </tr> -->
                                     <tr class="total">
                                         <td>Total</td>
-                                        <th>$456.00</th>
+                                        <th>&#8377;{{cart.total}}</th>
                                     </tr>
                                 </tbody>
                             </table>
@@ -253,7 +245,7 @@
  
  {% block javascriptblock%}
  <script>
-		
+		//Address form validator
  		$('#checkout_address_form').validate({
  			errorClass			: "error-class",
  			rules:{
@@ -329,11 +321,13 @@
 			    }
 			});
 		});
-	
+	//On click of back button hide the order preview div and show the address div
 	$('#back_address_btn').on('click',function(){
 		$('#address_div').show();
 		$('#order_review_div').hide();
 	});
+	
+	
  </script>
  
  {% endblock javascriptblock%}
