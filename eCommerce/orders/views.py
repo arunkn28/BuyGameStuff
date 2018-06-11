@@ -2,9 +2,13 @@ from django.shortcuts import render
 from django.views import View
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
-from ..carts.models import Cart, CartDetails
-from .models import Order, OrderDetails
+
 from ..account.utils import STATE_MAPPING
+from ..carts.models import Cart, CartDetails
+from ..account.models import AccountAddress, Account
+
+from .models import Order, OrderDetails
+
 # Create your views here.
 
 class OrderViewBase(View):
@@ -20,11 +24,16 @@ class OrderView(OrderViewBase):
     
     def get(self,request):
         try:
-            cart            =   self.cart_obj.get_cart_by_user(request.user)
-            cart_details    =   self.cart_det_obj.get_cart_items(cart.first().id)
-            self.context_dict['cart']           = cart.first()
-            self.context_dict['cart_details']   = cart_details
-            self.context_dict['states'] = STATE_MAPPING
+            #Make changes to get userid and account from session
+            user                                =   User.objects.filter(username=request.user)
+            account                             =   Account.objects.get_account_by_user(user.first().id)
+            address_details                     =   AccountAddress.objects.seacrh_address_by_account(account.first().id)
+            cart                                =   self.cart_obj.get_cart_by_user(request.user)
+            cart_details                        =   self.cart_det_obj.get_cart_items(cart.first().id)
+            self.context_dict['cart']           =   cart.first()
+            self.context_dict['cart_details']   =   cart_details
+            self.context_dict['states']         =   STATE_MAPPING
+            self.context_dict['address_details']=   address_details.first()
             return render(request, 'order.html', self.context_dict)
         except Exception as e:
             print("500")
@@ -32,6 +41,11 @@ class OrderView(OrderViewBase):
             
     def post(self,request):
         """
+        :NOTE:: Check that the quantity of items is available 
+        If not available show a message saying that the available quantity is x,
+        and update the quantity with x
+        Also on successfull completion of payment subtract the quntity in
+        the product table
         Create an order with status as Created
         Check if already an order exists in created status for this user.
         If exists :

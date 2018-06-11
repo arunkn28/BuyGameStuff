@@ -17,7 +17,7 @@
 				<!-- Address Start -->
 				<div id='address_div'>
 					<div class="col-md-9" id="checkout">
-				<form id="checkout_address_form" method="post" action="">{% csrf_token %}
+				<form id="checkout_address_form" method="post" action="#">{% csrf_token %}
                     <div class="box">
                             <h1>Checkout</h1>
                             <ul class="nav nav-pills nav-justified">
@@ -32,13 +32,13 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label for="first_name">Firstname</label>
-                                            <input type="text" class="form-control" id="first_name" name="first_name">
+                                            <input type="text" class="form-control" id="first_name" name="first_name" value="{{address_details.first_name}}">
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label for="last_name">Lastname</label>
-                                            <input type="text" class="form-control" id="last_name" name="last_name">
+                                            <input type="text" class="form-control" id="last_name" name="last_name" value="{{address_details.last_name}}">
                                         </div>
                                     </div>
                                 </div>
@@ -48,13 +48,13 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label for="phone">Phone</label>
-                                            <input type="text" class="form-control" id="phone_number" maxlength="10" name="phone_number">
+                                            <input type="text" class="form-control" id="phone_number" maxlength="10" name="phone_number" value="{{address_details.phone_number}}">
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label for="building_info">Building Info</label>
-                                            <input type="text" class="form-control" id="building_info" name="building_info">
+                                            <input type="text" class="form-control" id="building_info" name="building_info" value="{{address_details.building_info}}">
                                         </div>
                                     </div>
                                 </div>
@@ -64,19 +64,19 @@
                                 	<div class="col-sm-6 col-md-3">
                                         <div class="form-group">
                                             <label for="area">Area</label>
-                                            <input type="text" class="form-control" id="area" name="area">
+                                            <input type="text" class="form-control" id="area" name="area" value="{{address_details.area}}">
                                         </div>
                                     </div>
                                     <div class="col-sm-6 col-md-3">
                                         <div class="form-group">
                                             <label for="city">City</label>
-                                            <input type="text" class="form-control" id="city" name="city">
+                                            <input type="text" class="form-control" id="city" name="city" value="{{address_details.city}}">
                                         </div>
                                     </div>
                                     <div class="col-sm-6 col-md-3">
                                         <div class="form-group">
                                             <label for="pincode">Pincode</label>
-                                            <input type="text" class="form-control" id="pincode" name="pincode">
+                                            <input type="text" class="form-control" id="pincode" name="pincode" value="{{address_details.pincode}}">
                                         </div>
                                     </div>
                                     <div class="col-sm-6 col-md-3">
@@ -134,7 +134,7 @@
                         <form method="post" id="place_order_form" action="">{% csrf_token%}
                             <h1>Checkout - Order review</h1>
                             <ul class="nav nav-pills nav-justified">
-                                <li><a href="checkout1.html"><i class="fa fa-map-marker"></i><br>Address</a>
+                                <li><a href="{% url 'order:orderview'%}"><i class="fa fa-map-marker"></i><br>Address</a>
                                 </li>
                                 <li class="active"><a href="#"><i class="fa fa-eye"></i><br>Order Review</a>
                                 </li>
@@ -185,10 +185,14 @@
                                 <div class="pull-left">
                                     <a  class="btn btn-default" id="back_address_btn"><i class="fa fa-chevron-left"></i>Back to Address Details</a>
                                 </div>
-                                <div class="pull-right">
+                                <!-- <div class="pull-right">
                                     <button type="submit" class="btn btn-primary" id="place_order_btn">Place an order<i class="fa fa-chevron-right"></i>
                                     </button>
-                                </div>
+                                </div> -->
+                                <div class="pull-right">
+                                <a href="https://test.instamojo.com/@arunkn28/"  class="btn btn-primary" rel="im-checkout" data-behaviour="remote" data-style="light" data-text="Checkout With Instamojo"></a>
+								<script src="https://js.instamojo.com/v1/button.js"></script>
+								</div>
                             </div>
                         </form>
                     </div>
@@ -281,7 +285,13 @@
  									},
  				state			:	"Please select a state",
  				address_type	: 	"Please select an address type"
- 			}
+ 			},
+ 			submitHandler: function(form) {
+		 					$("#checkout_address_form").submit(function(e){
+		 				  			 e.preventDefault();
+		 					});
+ 						address_ajax_submit();
+ 			  			}
  		});
  		
  		$.validator.addMethod('phone_number',function(value,element){
@@ -295,8 +305,7 @@
  		});
  		
 		//Ajax call to update the address for this order
-		$('#checkout_address_form').submit(function(e){
-			e.preventDefault();
+		function address_ajax_submit(){
 			data = {};
 			data['first_name']		=$('#first_name').val();
 			data['last_name']		=$('#last_name').val();
@@ -314,14 +323,14 @@
 			    data: data,
 			    dataType: "json",
 			    success: function(resp){
-			        $('#address_div').hide();
-					$('#order_review_div').show();
+			    	 $('#address_div').hide();
+					 $('#order_review_div').show();
 			    },
 			    error: function(HttpRequest, textStatus, errorThrown) { 
 			        //alert("Status: " + textStatus); alert("Error: " + errorThrown); 
 			    }
 			});
-		});
+		} 
 	//On click of back button hide the order preview div and show the address div
 	$('#back_address_btn').on('click',function(){
 		$('#address_div').show();

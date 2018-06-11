@@ -28,7 +28,11 @@ class CartView(CartsBaseView):
             if request.user.is_authenticated():
                 cart = self.cart_obj.get_cart_by_user(request.user)
             else:
-                cart = self.cart_obj.get_cart_by_id(request.session.get('cart_id',None)) 
+                cart = self.cart_obj.get_cart_by_id(request.session.get('cart_id',None))
+            
+            if not cart:
+                self.context['no_items'] = True
+                return  render(request, 'cart.html', self.context)
             request.session['cart_id'] = cart.first().id
             cart_details_list =[]
             if cart:

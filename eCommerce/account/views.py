@@ -38,13 +38,14 @@ class LoginView(AccountBaseClass):
             username     = request.POST['email']
             password     = request.POST['password']
             next_        = request.GET.get('next')
-            next_post    = request.GET.get('next')
-            
-            next_url = next_ or next_post
+            next_post    = request.POST.get('next')
+            next_url     = next_ or next_post
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 CartBackend().updateCartWithUser(user, request.session.get('cart_id'))
                 login(request, user)
+                """Also set the userid and account id in session so that we dont have to make db
+                calls for these details"""
                 if is_safe_url(next_url, request.get_host()):
                     redirect(next_url)
                 else:
@@ -77,6 +78,8 @@ class RegisterView(AccountBaseClass):
             if user:
                 """
                 Login him and redirect to the login Page. Send account Activation Mailer??
+                Also set the userid and account id in session so that we dont have to make db
+                calls for these details
                 """
                 login(request, user)
                 self.account_obj.create_account(user ,first_name, last_name, email)
